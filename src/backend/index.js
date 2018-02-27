@@ -1,4 +1,4 @@
-const express  = require('express');
+import express from 'express';
 const path     = require('path');
 const mongoose = require('mongoose');
 const config   = require('./config');
@@ -12,7 +12,7 @@ if (config.MONGO_URI) {
   const database = mongoose.connection;
   database.on('error', console.error.bind(console, 'connection error:'));
   database.once('open', function () {
-    console.log('database connected')
+    console.log('mongo database connected')
   });
 }
 
