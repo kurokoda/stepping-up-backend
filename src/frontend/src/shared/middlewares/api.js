@@ -1,6 +1,5 @@
 import Promise from 'bluebird';
 import {camelizeKeys} from 'humps';
-import _ from 'lodash';
 import superAgent from 'superagent';
 import config from '../../shared/config';
 
@@ -59,7 +58,7 @@ function createRequestPromise(actionCreator, getState, dispatch) {
           }));
         }
 
-        if (_.isFunction(params.afterError)) {
+        if (typeof params.afterError === 'function') {
           params.afterError({getState});
         }
         reject();
@@ -73,7 +72,7 @@ function createRequestPromise(actionCreator, getState, dispatch) {
           response: resBody
         }));
 
-        if (_.isFunction(params.afterSuccess)) {
+        if (typeof params.afterSuccess === 'function') {
           params.afterSuccess({getState});
         }
         resolve(resBody);
