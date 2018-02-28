@@ -4,8 +4,8 @@ const mongoose     = require('mongoose');
 const favicon      = require('serve-favicon');
 const logger       = require('morgan');
 const bodyParser   = require('body-parser');
-const config       = require('./config');
 const cookieParser = require('cookie-parser');
+const config       = require('../config');
 
 const app = express();
 

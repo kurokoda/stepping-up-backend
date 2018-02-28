@@ -24,9 +24,7 @@
     "babel-preset-stage-2": "^6.24.1"
   },
   "scripts": {
-    "start": "nodemon src/backend/index.js",
-    "build": "echo ... I am Building ...",
-    "serve": "echo ... I am Serving ...",
-    "heroku-postbuild": "cd src/frontend && yarn --production=false && yarn run build"
+    "heroku-postbuild": "cd src/frontend && yarn --production=false && yarn run build",
+    "start": "nodemon src/backend/index.js"
   }
 }
