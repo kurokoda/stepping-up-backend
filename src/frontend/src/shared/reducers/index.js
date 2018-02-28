@@ -1,3 +1,5 @@
+import user from './user';
+
 const rehydrated = (state = false, action) => {
   switch (action.type) {
     case 'persist/REHYDRATE':
@@ -8,5 +10,6 @@ const rehydrated = (state = false, action) => {
 };
 
 export default {
+  user,
   rehydrated,
 };
