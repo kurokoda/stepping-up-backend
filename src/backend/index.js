@@ -33,8 +33,8 @@ app.use(favicon(path.join(__dirname, '..', 'frontend/build', 'favicon.ico')));
 
 // Routing ----------------------------------------------------------------------
 
-app.get('/api/foo', (req, res) => {
-  res.send('Foo has been sent')
+app.get('/api/hello', (req, res) => {
+  res.send({ express: 'Die From Express' });
 });
 
 // Error Handling ----------------------------------------------------------------------
