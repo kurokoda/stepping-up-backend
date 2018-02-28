@@ -33,11 +33,6 @@ app.use(favicon(path.join(__dirname, '..', 'frontend/build', 'favicon.ico')));
 
 // Routing ----------------------------------------------------------------------
 
-app.get('/', (req, res) => {
-  res.send('Foo has been sent')
-  //res.sendFile(path.join(__dirname, '..', 'frontend/build/index.html'));
-});
-
 app.get('/api/foo', (req, res) => {
   res.send('Foo has been sent')
 });
