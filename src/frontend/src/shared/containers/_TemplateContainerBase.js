@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
-import TemplateComponent from './_TemplateComponent';
+import TemplateComponent from '../../../../_web/views/_TemplateComponent';
 
 class TemplateContainer extends Component {
 
