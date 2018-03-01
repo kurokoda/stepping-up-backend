@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import Modal from '../../../../shared/components/modal';
 import Header from '../header';
 
 class HeaderContainer extends Component {
@@ -15,6 +17,7 @@ class HeaderContainer extends Component {
   render() {
     return (
       <section>
+        <Modal config={this.props.app.get('modal')}/>
         <Header/>
         <div style={styles.container}>
           {this.props.children}
@@ -26,7 +29,13 @@ class HeaderContainer extends Component {
 
 // Exports -------------------------------------------------------------
 
-export default withRouter(HeaderContainer);
+function mapStateToProps(state) {
+  return {
+    app: state.app,
+  };
+}
+
+export default withRouter(connect(mapStateToProps, {})(HeaderContainer));
 
 // Styles -------------------------------------------------------------
 

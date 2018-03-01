@@ -1,8 +1,26 @@
+import createReactClass from 'create-react-class';
 import Immutable from 'immutable';
+import React from 'react';
 import * as ActionType from '../actions/app';
 
+const Content = createReactClass({
+  render: function () {
+    return (
+      <div>
+        HELLO PIGGY
+      </div>
+    )
+  }
+})
+
 const defaultState = Immutable.fromJS({
-  modal : null,
+  modal : {
+    Content       : Content,
+    onAfterOpen   : null,
+    onRequestClose: null,
+    styles        : null,
+    contentLabel  : 'Bitch Label'
+  },
   errors: {},
 });
 

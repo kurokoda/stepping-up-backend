@@ -3,7 +3,7 @@ import _ from 'lodash';
 import React, {Component} from 'react';
 import {Button} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
-import {PasswordInput, TextInput} from '../../../../../shared/inputs';
+import {PasswordInput, TextInput} from '../../../../../shared/components/inputs';
 import Validation from '../../../../../shared/validation';
 import {minLength, required} from '../../../../../shared/validation/rules';
 
