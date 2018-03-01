@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import {PAGES} from '../../../../shared/constants/pages';
+import PAGES from '../../../../shared/constants/pages';
 
 class PageLinks extends Component {
 
@@ -21,7 +21,7 @@ class PageLinks extends Component {
   }
 
   get linkElements() {
-    return PAGES.ALL.map((page) => {
+    return PAGES.ALL.APPLICATION.map((page) => {
       return <Link
         key={page.key}
         to={page.route}

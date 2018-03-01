@@ -26,7 +26,7 @@ const ModalComponent = ({...props}) => {
 Modal.setAppElement('#root');
 
 ModalComponent.propTypes = {
-  'config': PropTypes.object.isRequired,
+  'config': PropTypes.object,
 };
 
 export default ModalComponent;

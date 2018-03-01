@@ -15,7 +15,7 @@ const Content = createReactClass({
 
 const defaultState = Immutable.fromJS({
   modal : {
-    Content       : Content,
+    Content       : null,
     onAfterOpen   : null,
     onRequestClose: null,
     styles        : null,

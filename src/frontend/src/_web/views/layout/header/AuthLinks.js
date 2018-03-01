@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import {AUTH} from '../../../../shared/constants/pages';
+import PAGES from '../../../../shared/constants/pages';
 
-class AuthLinks extends Component {
+class USERLinks extends Component {
 
   // Props -------------------------------------------------------------
 
@@ -21,7 +21,7 @@ class AuthLinks extends Component {
   }
 
   get linkElements() {
-    return AUTH.ALL.map((page) => {
+    return PAGES.ALL.USER.map((page) => {
       return <Link
         key={page.key}
         to={page.route}
@@ -34,7 +34,7 @@ class AuthLinks extends Component {
 
 // Exports -------------------------------------------------------------
 
-export default withRouter(AuthLinks);
+export default withRouter(USERLinks);
 
 // Styles -------------------------------------------------------------
 

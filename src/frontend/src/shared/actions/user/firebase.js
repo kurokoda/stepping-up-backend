@@ -1,4 +1,4 @@
-import {CALL_API} from '../middlewares/api';
+import {CALL_API} from '../../middlewares/api';
 
 export const LOG_IN  = Symbol('LOG_IN');
 export const LOG_OUT = Symbol('LOG_OUT');
