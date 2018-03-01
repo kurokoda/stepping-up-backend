@@ -6,12 +6,12 @@ import ResetPasswordComponent from '../../_web/views/content/auth/resetPassword'
 import SignupComponent from '../../_web/views/content/auth/signup';
 import {AUTH, PAGES} from '../../shared/constants/pages';
 //
-import AboutContainer from '../../shared/containers/AboutContainer';
+import AboutContainer from '../../shared/containers/pages/AboutContainer';
 import LoginContainer from '../../shared/containers/auth/LoginContainer';
 import LogoutContainer from '../../shared/containers/auth/LogoutContainer';
 import ResetPasswordContainer from '../../shared/containers/auth/ResetPasswordContainer';
 import SignupContainer from '../../shared/containers/auth/SignupContainer';
-import HomeContainer from '../../shared/containers/HomeContainer';
+import HomeContainer from '../../shared/containers/pages/HomeContainer';
 //
 import AboutComponent from '../views/content/pages/about';
 import HomeComponent from '../views/content/pages/home';
