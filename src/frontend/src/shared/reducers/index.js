@@ -1,3 +1,4 @@
+import app from './app';
 import user from './user';
 
 const rehydrated = (state = false, action) => {
@@ -10,6 +11,7 @@ const rehydrated = (state = false, action) => {
 };
 
 export default {
+  app,
   user,
   rehydrated,
 };
