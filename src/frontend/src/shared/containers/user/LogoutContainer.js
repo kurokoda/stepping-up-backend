@@ -1,25 +1,30 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {logout} from '../../actions/user';
 
 class LogoutContainer extends Component {
-  static propTypes = {
-    'Layout': PropTypes.func.isRequired
-  };
-
-  static defaultProps = {};
-
   render() {
     const {Layout} = this.props;
+    const props    = {
+      logout
+    };
 
     return (
-      <Layout/>
+      <Layout {...props}/>
     );
   }
 }
 
 const mapStateToProps = state => ({});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {logout};
 
 export default connect(mapStateToProps, mapDispatchToProps)(LogoutContainer);
+
+mapDispatchToProps.propTypes = {
+  'Layout': PropTypes.func.isRequired,
+  'logout': PropTypes.func.isRequired,
+};
+
+mapDispatchToProps.defaultProps = {};

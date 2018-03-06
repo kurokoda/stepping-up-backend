@@ -1,9 +1,10 @@
-const express      = require('express');
-const path         = require('path');
-const mongoose     = require('mongoose');
-const logger       = require('morgan');
 const bodyParser   = require('body-parser');
 const cookieParser = require('cookie-parser');
+const express      = require('express');
+const session      = require('express-session');
+const mongoose     = require('mongoose');
+const logger       = require('morgan');
+const path         = require('path');
 const config       = require('./config');
 
 const app = express();
@@ -21,6 +22,11 @@ if (config.MONGO_URI) {
   });
 }
 
+// Set ----------------------------------------------------------------------
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
 // Use ----------------------------------------------------------------------
 
 app.use(logger('dev'));
@@ -28,11 +34,32 @@ app.use(express.static(path.join(__dirname, '..', 'frontend/build')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+app.use(session({
+  secret           : 'work hard',
+  resave           : true,
+  saveUninitialized: false
+}));
+
 
 // Routing ----------------------------------------------------------------------
 
 app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Die From Express' });
+  res.send({express: 'Die From Express'});
+});
+
+app.post('/api/user/signup', (req, res, next) => {
+  const controller = require('./controllers/user');
+  controller.signup(req, res, next);
+});
+
+app.post('/api/user/login', (req, res, next) => {
+  const controller = require('./controllers/user');
+  controller.login(req, res, next);
+});
+
+app.post('/api/user/logout', (req, res) => {
+  const controller = require('./controllers/user');
+  controller.logout(req, res);
 });
 
 // Error Handling ----------------------------------------------------------------------

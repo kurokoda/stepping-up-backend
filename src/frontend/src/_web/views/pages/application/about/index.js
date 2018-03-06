@@ -1,7 +1,8 @@
+import {css, StyleSheet} from 'aphrodite';
 import React, {Component} from 'react';
 import {Button} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
-import firebase from '../../../../../shared/firebase/index';
+import {Firebase} from '../../../../../shared/firebase';
 
 class AboutView extends Component {
 
@@ -21,7 +22,7 @@ class AboutView extends Component {
   }
 
   componentWillMount() {
-    let messageRefs = firebase.database().ref('messages').orderByKey().limitToLast(100);
+    let messageRefs = Firebase.database().ref('messages').orderByKey().limitToLast(100);
     let messages    = [];
     messageRefs.on('child_added', message => {
       messages.push({text: message.val(), id: message.key});
@@ -34,9 +35,9 @@ class AboutView extends Component {
     const textString  = 'About View';
 
     return (
-      <section style={styles.container}>
-        <div style={styles.content}>
-          <span style={styles.text}>{textString}</span>
+      <section className={css(styles.container)}>
+        <div className={css(styles.content)}>
+          <span className={css(styles.text)}>{textString}</span>
           <form onSubmit={this.onSubmit}>
             <input type="text" ref={ el => this.input = el }/>
             <input type="submit"/>
@@ -55,7 +56,7 @@ class AboutView extends Component {
   // Non-React -------------------------------------------------------------
 
   onSubmit = (event) => {
-    firebase.database().ref('messages').push(this.input.value);
+    Firebase.database().ref('messages').push(this.input.value);
     this.input.value = '';
     event.preventDefault();
   };
@@ -71,24 +72,20 @@ export default withRouter(AboutView);
 
 // Styles -------------------------------------------------------------
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFF',
-    display        : 'flex',
-    alignItems     : 'center',
-    justifyContent : 'center',
-    textAlign      : 'center',
-    height         : '100vh',
+    display       : 'flex',
+    flex          : '1 1 auto',
+    alignItems    : 'center',
+    justifyContent: 'center',
   },
   content  : {
-    WebkitBoxFlex: 0,
-    WebkitFlex   : 'none',
-    MsFlex       : 'none',
-    flex         : 'none',
-    maxWidth     : '50%',
+    width  : '420px',
+    outline: '1px solid gray',
+    padding: '20px',
   },
   text     : {
     display: 'block',
     color  : '#0F0',
   },
-};
+});

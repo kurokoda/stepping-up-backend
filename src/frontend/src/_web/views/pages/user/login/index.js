@@ -1,3 +1,4 @@
+import {css, StyleSheet} from 'aphrodite';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import React, {Component} from 'react';
@@ -14,15 +15,15 @@ class LoginView extends Component {
     this.onChange     = this.onChange.bind(this);
 
     this.fieldValidations = [
-      Validation.set('username', 'Username', required, minLength(3)),
+      Validation.set('email', 'Email', required, minLength(3)),
       Validation.set('password', 'Password', required)
     ];
 
     this.state = {
       showErrors      : false,
       validationErrors: {},
-      username        : '',
-      password        : '',
+      email           : 'indigo.personal@gmail.com',
+      password        : 'hope23AP',
     };
   }
 
@@ -34,15 +35,14 @@ class LoginView extends Component {
 
   render() {
     return (
-      <div style={styles.container}>
-        <div>Template Component</div>
-        <form onSubmit={this.handleSubmit}>
-          <TextInput value={this.state.username}
+      <div id='login-container' className={`${css(styles.container)} container`}>
+        <form className={css(styles.content)} onSubmit={this.handleSubmit}>
+          <TextInput value={this.state.email}
                      onChange={this.onChange}
                      showError={this.state.showErrors}
-                     errorText={this.getErrorFor('username')}
-                     label='Username'
-                     id='username'/>
+                     errorText={this.getErrorFor('email')}
+                     label='Email'
+                     id='email'/>
 
           <PasswordInput value={this.state.password}
                          onChange={this.onChange}
@@ -82,7 +82,7 @@ class LoginView extends Component {
     if (!_.isEmpty(this.state.validationErrors)) return null;
     this.props.onSubmit(
       {
-        username: this.state.username,
+        email   : this.state.email,
         password: this.state.password
       }
     );
@@ -95,10 +95,19 @@ LoginView.defaultProps = {};
 
 // Styles -------------------------------------------------------------
 
-const styles = {
-  container: {},
-  content  : {},
-};
+const styles = StyleSheet.create({
+  container: {
+    display       : 'flex',
+    flex          : '1 1 auto',
+    alignItems    : 'center',
+    justifyContent: 'center',
+  },
+  content  : {
+    width  : '420px',
+    outline: '1px solid gray',
+    padding: '20px',
+  },
+});
 
 export default withRouter(LoginView);
 

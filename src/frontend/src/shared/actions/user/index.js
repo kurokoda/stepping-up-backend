@@ -13,6 +13,17 @@ function getProxy() {
   }
 }
 
-export const LOG_IN  = proxy.LOG_IN;
-export const LOG_OUT = proxy.LOG_OUT;
+// User
+
+export const login         = proxy.login;
+export const logout        = proxy.logout;
+export const signup        = proxy.signup;
+export const resetPassword = proxy.resetPassword;
+
+export const ActionTypes = {
+  USER_UPDATE: proxy.USER_UPDATE,
+  USER_LOGIN: proxy.USER_LOGIN,
+  USER_LOGOUT: proxy.USER_LOGOUT,
+  USER_SIGNUP: proxy.USER_SIGNUP,
+};
 

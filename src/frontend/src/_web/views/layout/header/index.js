@@ -3,26 +3,23 @@ import {withRouter} from 'react-router-dom';
 import AuthLinks from './AuthLinks';
 import PageLinks from './PageLinks';
 
-
-class Header extends Component {
-
-  // Props -------------------------------------------------------------
-
-  static propTypes = {};
-
-  static defaultProps = {};
+const Header = ({...props}) => {
 
   // React -------------------------------------------------------------
 
-  render() {
-    return (
-      <section style={styles.container}>
-        <PageLinks/>
-        <AuthLinks/>
-      </section>
-    );
-  }
+  return (
+    <header id='header' style={styles.container}>
+      <PageLinks/>
+      <AuthLinks user={props.user}/>
+    </header>
+  );
 }
+
+// Props -------------------------------------------------------------
+
+Header.propTypes = {};
+
+Header.defaultProps = {};
 
 // Exports -------------------------------------------------------------
 
@@ -33,7 +30,6 @@ export default withRouter(Header);
 const styles = {
   container: {
     backgroundColor: 'black',
-    height         : '100px',
-    width          : '100%',
+    height         : '80px',
   },
 };

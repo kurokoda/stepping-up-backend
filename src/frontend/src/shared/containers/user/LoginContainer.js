@@ -1,25 +1,34 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {login} from '../../actions/user';
 
 class LoginContainer extends Component {
-  static propTypes = {
-    'Layout': PropTypes.func.isRequired
-  };
-
-  static defaultProps = {};
-
   render() {
     const {Layout} = this.props;
+    const props    = {
+      onSubmit: this.onSubmit.bind(this),
+    };
 
     return (
-      <Layout/>
+      <Layout {...props}/>
     );
+  }
+
+  onSubmit(formData) {
+    this.props.login(formData)
   }
 }
 
 const mapStateToProps = state => ({});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {login};
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginContainer);
+
+mapDispatchToProps.propTypes = {
+  'Layout': PropTypes.func.isRequired,
+  'login' : PropTypes.func.isRequired,
+};
+
+mapDispatchToProps.defaultProps = {};

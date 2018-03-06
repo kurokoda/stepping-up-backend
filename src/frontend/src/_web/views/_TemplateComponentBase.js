@@ -7,7 +7,7 @@ class TemplateComponent extends Component {
 
   render() {
     return (
-      <div className="templateComponent">Template</div>
+      <div id="templateComponent">Template</div>
     );
   }
 }

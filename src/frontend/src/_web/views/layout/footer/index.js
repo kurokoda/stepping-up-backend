@@ -1,24 +1,20 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 
-class Footer extends Component {
-
-  // Props -------------------------------------------------------------
-
-  static propTypes = {};
-
-  static defaultProps = {};
+const Footer = ({...props}) => {
 
   // React -------------------------------------------------------------
 
-  render() {
-    return (
-      <section style={styles.container}>
-        <span>Footer</span>
-      </section>
-    );
-  }
+  return (
+    <footer id='footer' style={styles.container}/>
+  );
 }
+
+// Props -------------------------------------------------------------
+
+Footer.propTypes = {};
+
+Footer.defaultProps = {};
 
 // Exports -------------------------------------------------------------
 
@@ -29,7 +25,6 @@ export default withRouter(Footer);
 const styles = {
   container: {
     backgroundColor: 'black',
-    height         : '100px',
-    width          : '100%',
+    height         : '40px',
   },
-}
+};

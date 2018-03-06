@@ -1,3 +1,4 @@
+import {css, StyleSheet} from 'aphrodite';
 import update from 'immutability-helper';
 import _ from 'lodash';
 import React, {Component} from 'react';
@@ -15,6 +16,7 @@ class SignupView extends Component {
 
     this.fieldValidations = [
       Validation.set('username', 'Username', required, minLength(3)),
+      Validation.set('email', 'Email', required, minLength(3)),
       Validation.set('password', 'Password', required),
       Validation.set('passwordConfirm', 'Password Confirm', required, mustMatch('password', 'Password'))
     ];
@@ -22,9 +24,10 @@ class SignupView extends Component {
     this.state = {
       showErrors      : false,
       validationErrors: {},
-      username        : '',
-      password        : '',
-      passwordConfirm : '',
+      username        : 'indigo',
+      email           : 'indigo.personal@gmail.com',
+      password        : 'hope23AP',
+      passwordConfirm : 'hope23AP',
     };
   }
 
@@ -36,15 +39,20 @@ class SignupView extends Component {
 
   render() {
     return (
-      <div style={styles.container}>
-        <div>Signup Component</div>
-        <form onSubmit={this.handleSubmit}>
+      <div className={`${css(styles.container)} container`}>
+        <form className={css(styles.content)} onSubmit={this.handleSubmit}>
           <TextInput value={this.state.username}
                      onChange={this.onChange}
                      showError={this.state.showErrors}
                      errorText={this.getErrorFor('username')}
                      label='Username'
                      id='username'/>
+          <TextInput value={this.state.email}
+                     onChange={this.onChange}
+                     showError={this.state.showErrors}
+                     errorText={this.getErrorFor('email')}
+                     label='Email'
+                     id='email'/>
           <PasswordInput value={this.state.password}
                          onChange={this.onChange}
                          showError={this.state.showErrors}
@@ -62,7 +70,7 @@ class SignupView extends Component {
               className="btn-block"
               bsStyle='success'
               type='submit'>
-              LOG IN
+              SIGN UP
             </Button>
           </p>
         </form>
@@ -90,6 +98,7 @@ class SignupView extends Component {
     this.props.onSubmit(
       {
         username: this.state.username,
+        email   : this.state.email,
         password: this.state.password
       }
     );
@@ -102,10 +111,18 @@ SignupView.defaultProps = {};
 
 // Styles -------------------------------------------------------------
 
-const styles = {
-  container: {},
-  content  : {},
-};
+const styles = StyleSheet.create({
+  container: {
+    display       : 'flex',
+    alignItems    : 'center',
+    justifyContent: 'center',
+    textAlign     : 'center',
+    height        : '100vh',
+  },
+  content  : {
+    width: '320px'
+  },
+});
 
 export default withRouter(SignupView);
 

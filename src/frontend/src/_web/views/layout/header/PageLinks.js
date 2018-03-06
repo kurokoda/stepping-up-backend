@@ -4,17 +4,11 @@ import PAGES from '../../../../shared/constants/pages';
 
 class PageLinks extends Component {
 
-  // Props -------------------------------------------------------------
-
-  static propTypes = {};
-
-  static defaultProps = {};
-
   // React -------------------------------------------------------------
 
   render() {
     return (
-      <section>
+      <section id='page-links'>
         {this.linkElements}
       </section>
     );
@@ -31,6 +25,12 @@ class PageLinks extends Component {
     })
   }
 }
+
+// Props -------------------------------------------------------------
+
+PageLinks.propTypes = {};
+
+PageLinks.defaultProps = {};
 
 // Exports -------------------------------------------------------------
 
