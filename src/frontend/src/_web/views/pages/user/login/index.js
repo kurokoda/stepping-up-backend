@@ -3,8 +3,9 @@ import update from 'immutability-helper';
 import _ from 'lodash';
 import React, {Component} from 'react';
 import {Button} from 'react-bootstrap';
-import {withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {PasswordInput, TextInput} from '../../../../../shared/components/inputs';
+import PAGES from '../../../../../shared/constants/pages';
 import Validation from '../../../../../shared/validation';
 import {minLength, required} from '../../../../../shared/validation/rules';
 
@@ -23,7 +24,7 @@ class LoginView extends Component {
       showErrors      : false,
       validationErrors: {},
       email           : 'indigo.personal@gmail.com',
-      password        : 'hope23AP',
+      password        : 'password',
     };
   }
 
@@ -58,6 +59,8 @@ class LoginView extends Component {
               LOG IN
             </Button>
           </p>
+          <span>Don't have an account?   </span>
+          <Link to={PAGES.USER.SIGNUP_USER.route}>{PAGES.USER.SIGNUP_USER.label}</Link>
         </form>
       </div>
     );
@@ -98,14 +101,12 @@ LoginView.defaultProps = {};
 const styles = StyleSheet.create({
   container: {
     display       : 'flex',
-    flex          : '1 1 auto',
-    alignItems    : 'center',
     justifyContent: 'center',
+    textAlign     : 'center',
+    height        : '100vh',
   },
   content  : {
-    width  : '420px',
-    outline: '1px solid gray',
-    padding: '20px',
+    width: '320px'
   },
 });
 

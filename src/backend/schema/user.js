@@ -3,19 +3,35 @@ const bcrypt   = require('bcrypt');
 
 
 const UserSchema = new mongoose.Schema({
-  email   : {
+  nameFirst   : {
     type    : String,
     unique  : true,
     required: true,
     trim    : true
   },
-  username: {
+  nameLast    : {
     type    : String,
     unique  : true,
     required: true,
     trim    : true
   },
-  password: {
+  username    : {
+    type    : String,
+    unique  : true,
+    required: true,
+    trim    : true
+  },
+  email       : {
+    type    : String,
+    unique  : true,
+    required: true,
+    trim    : true
+  },
+  password    : {
+    type    : String,
+    required: true,
+  },
+  facilityCode: {
     type    : String,
     required: true,
   },
@@ -31,6 +47,13 @@ UserSchema.pre('save', function (next) {
     next();
   })
 });
+
+UserSchema.methods.toJSON = function() {
+  const obj = this.toObject();
+  delete obj.password;
+  delete obj.v;
+  return obj;
+}
 
 UserSchema.statics.authenticate = function (email, password, callback) {
   User.findOne({email: email})

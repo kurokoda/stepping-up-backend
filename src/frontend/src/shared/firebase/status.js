@@ -4,7 +4,6 @@
 export default function (dispatch, type, val) {
   return new Promise((resolve, reject) => {
     // Validate types
-    console.log('Here I am')
     const allowed = ['error', 'success', 'info', 'loading'];
     if (!allowed.includes(type)) {
       return reject('Type should be one of success, error or info');

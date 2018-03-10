@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
+
 
 class ProfileContainer extends Component {
   static propTypes = {
@@ -10,6 +12,10 @@ class ProfileContainer extends Component {
   static defaultProps = {};
 
   render() {
+    if (!this.props.user) {
+      return <Redirect to='/'/>;
+    }
+
     const {Layout} = this.props;
 
     return (
@@ -18,7 +24,9 @@ class ProfileContainer extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  user: state.user,
+});
 
 const mapDispatchToProps = {};
 

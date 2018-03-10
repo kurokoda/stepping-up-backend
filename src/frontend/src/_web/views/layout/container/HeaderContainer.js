@@ -1,28 +1,33 @@
 import {css, StyleSheet} from 'aphrodite';
 import React, {Component} from 'react';
+import {Alert} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import {logout} from '../../../../shared/actions/user';
 import Header from '../../layout/header';
 
-
 class HeaderContainer extends Component {
-
-  // Props -------------------------------------------------------------
-
-  static propTypes = {};
-
-  static defaultProps = {};
 
   // React -------------------------------------------------------------
 
   render() {
+    const alert = this.props.app.get('alert');
     return (
       <section id='app-container' className={css(styles.container)}>
         {/*<Modal config={this.props.app.get('modal')}/>*/}
         <div id='header-container' className={css(styles.header)}>
-          <Header user={this.props.user}/>
+          <Header
+            logout={this.props.logout}
+            user={this.props.user}/>
         </div>
-        <div id='main-container' className={css(styles.main)}>
+        { alert && (
+          <Alert bsStyle="warning">
+            <strong>{alert.get('strong')}</strong> {alert.get('msg')}
+          </Alert>
+        )}
+        <div
+          id='main-container'
+          className={css(styles.main)}>
           {this.props.children}
         </div>
       </section>
@@ -30,16 +35,26 @@ class HeaderContainer extends Component {
   }
 }
 
+// Props -------------------------------------------------------------
+
+HeaderContainer.propTypes = {};
+
+HeaderContainer.defaultProps = {};
+
 // Exports -------------------------------------------------------------
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
-    app : state.app,
     user: state.user,
+    app : state.app,
   };
 }
 
-export default withRouter(connect(mapStateToProps, {})(HeaderContainer));
+const mapDispatchToProps = {
+  logout
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderContainer));
 
 // Styles -------------------------------------------------------------
 
@@ -50,14 +65,14 @@ const styles = StyleSheet.create({
     height  : '100vh',
   },
 
-
   header: {
     flex: '0 1 auto',
   },
 
   main: {
-    display: 'flex',
-    flex   : '1',
+    justifyContent: 'center',
+    display       : 'flex',
+    flex          : '1',
   },
 
   footer: {

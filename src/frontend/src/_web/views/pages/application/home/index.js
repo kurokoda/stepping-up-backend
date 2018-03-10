@@ -1,69 +1,70 @@
+import {css, StyleSheet} from 'aphrodite';
 import React, {Component} from 'react';
 import {Button} from 'react-bootstrap';
-import {withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
+import PAGES from '../../../../../shared/constants/pages';
 
 class HomeView extends Component {
   static propTypes = {};
 
   static defaultProps = {};
 
-  state = {
-    response: ''
-  };
-
-  componentDidMount() {
-    this.callApi()
-    .then(res => this.setState({response: res.express}))
-    .catch(err => console.log(err));
-  }
-
-  callApi = async () => {
-    const response = await fetch('/api/hello');
-    const body     = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    return body;
-  };
-
   render() {
-    const buttonTitle = 'Go To About';
-    const textString  = 'Home View';
-
     return (
-      <section style={styles.container}>
-        <div style={styles.content}>
-          <p className="App-intro">{this.state.response}</p>
-          <span style={styles.text}>{textString}</span>
-          <Button onClick={this.onClick}>{buttonTitle}</Button>
+      <section className={css(styles.container)}>
+        <div className={css(styles.content)}>
+          <img className={css(styles.logo)} src='logo.png' alt='My_Logo'/>
+          <div className={css(styles.tagline)}>
+            <h3>
+              A screening tool to manage mental health referrals within the justice system.
+            </h3>
+          </div>
+          { this.props.showAuthContainer && (
+            <div id='auth-container'>
+              <div>
+                <Link to={PAGES.USER.LOGIN.route}>
+                  <Button className={css(styles.button)}>Login</Button>
+                </Link>
+                <Link to={PAGES.USER.SIGNUP_USER.route}>
+                  <Button className={css(styles.button)}>Sign Up</Button>
+                </Link>
+              </div>
+              <Link to={PAGES.USER.SIGNUP_ADMIN.route}>{PAGES.USER.SIGNUP_ADMIN.label}</Link>
+            </div>)
+          }
         </div>
       </section>
     );
-  }
-
-  onClick = () => {
-    this.props.history.push('/about')
   }
 }
 
 export default withRouter(HomeView);
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFF',
     display        : 'flex',
-    alignItems     : 'center',
     justifyContent : 'center',
     textAlign      : 'center',
     height         : '100vh',
   },
-  content  : {
-    WebkitBoxFlex: 0,
-    WebkitFlex   : 'none',
-    MsFlex       : 'none',
-    flex         : 'none',
-    maxWidth     : '50%',
-  },
+  content  : {},
   text     : {
     display: 'block',
     color  : '#0F0',
   },
-};
+  logo     : {
+    width : '80vw',
+    margin: '20px',
+  },
+  button   : {
+    width : '200px',
+    margin: '0 10px 20px 10px',
+  },
+  tagline  : {
+    display  : 'block',
+    width    : '100%',
+    borderTop: '1px solid #CCCCCC',
+    padding  : '60px',
+  },
+});

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {alertHide} from '../../actions/app';
 import {login} from '../../actions/user';
 
 class LoginContainer extends Component {
@@ -16,13 +17,25 @@ class LoginContainer extends Component {
   }
 
   onSubmit(formData) {
-    this.props.login(formData)
+    this.props.login(
+      formData,
+      this.onLoginSuccess.bind(this),
+      this.onLoginError.bind(this)
+    );
+  }
+
+  onLoginSuccess() {
+    this.props.history.push('/dashboard');
+  }
+
+  onLoginError() {
+    setTimeout(() => this.props.alertHide(), 5000)
   }
 }
 
 const mapStateToProps = state => ({});
 
-const mapDispatchToProps = {login};
+const mapDispatchToProps = {login, alertHide};
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginContainer);
 

@@ -1,28 +1,26 @@
-const User = require('../schema/user');
+const Schema = require('../schema/user');
 
 module.exports.login = (req, res) => {
-  User.authenticate(req.body.email, req.body.password, function (error, user) {
+  Schema.authenticate(req.body.email, req.body.password, function (error, user) {
     if (error || !user) {
+      console.log('login fail')
       const err  = new Error('Wrong email or password.');
       err.status = 401;
-      console.log('Wrong email or password.');
-      res.send(err);
+      res.status(401).send(err);
     } else {
-      console.log('login request approved');
+      console.log('login success')
       req.session.userId = user._id;
-      res.status(200).send({express: 'signup request received'});
+      res.status(200).send(user);
     }
   });
 };
 
 module.exports.logout = (req, res) => {
   if (req.session) {
-    // delete session object
     req.session.destroy(function (err) {
       if (err) {
         res.status(500).send({express: 'logout error', params: req.body});
       } else {
-        console.log('logout successful');
         res.status(200).send({express: 'logout successful', params: req.body});
       }
     });
@@ -31,23 +29,26 @@ module.exports.logout = (req, res) => {
 
 module.exports.signup = (req, res) => {
   if (
+    req.body.nameFirst &&
+    req.body.nameLast &&
     req.body.email &&
     req.body.username &&
-    req.body.password
+    req.body.password &&
+    req.body.facilityCode
   ) {
     const userData = {
-      email   : req.body.email,
-      username: req.body.username,
-      password: req.body.password,
+      nameFirst   : req.body.nameFirst,
+      nameLast    : req.body.nameLast,
+      email       : req.body.email,
+      username    : req.body.username,
+      password    : req.body.password,
+      facilityCode: req.body.facilityCode,
     };
-    //use schema.create to insert data into the db
-    User.create(userData, function (err, user) {
+    Schema.create(userData, function (err) {
       if (err) {
-        console.log('Error creating user.');
-        res.status(403).send({express: 'signup request received', params: req.body});
+        res.status(403).send(err);
       } else {
-        console.log('User created!');
-        res.status(200).send({express: 'signup request received', params: req.body});
+        res.status(200).send();
       }
     });
   }

@@ -1,14 +1,34 @@
 const PAGES = {
   APPLICATION: {
-    HOME : {
+    HOME     : {
       key  : 'HOME',
       label: 'home',
       route: '/',
     },
-    ABOUT: {
-      key  : 'ABOUT',
-      label: 'about',
-      route: '/about',
+    DASHBOARD: {
+      key  : 'DASHBOARD',
+      label: 'dashboard',
+      route: '/dashboard',
+    },
+    FACILITY     : {
+      key  : 'FACILITY',
+      label: 'facility',
+      route: '/facility',
+    },
+    SCREEN   : {
+      key  : 'SCREEN',
+      label: 'screen',
+      route: '/screen',
+    },
+    ADMIN    : {
+      key  : 'ADMIN',
+      label: 'admin',
+      route: '/admin',
+    },
+    DETAINEE : {
+      key  : 'DETAINEE',
+      label: 'detainee',
+      route: '/detainee',
     },
   },
   USER       : {
@@ -20,17 +40,22 @@ const PAGES = {
     LOGOUT        : {
       key  : 'LOGOUT',
       label: 'logout',
-      route: '/logout',
+      route: '/login',
     },
     RESET_PASSWORD: {
       key  : 'RESET_PASSWORD',
       label: 'reset password',
       route: '/reset-password',
     },
-    SIGNUP        : {
-      key  : 'SIGNUP',
-      label: 'sign up',
-      route: '/signup',
+    SIGNUP_USER   : {
+      key  : 'SIGNUP_USER',
+      label: 'Register',
+      route: '/signupUser/user',
+    },
+    SIGNUP_ADMIN  : {
+      key  : 'SIGNUP_ADMIN',
+      label: 'Administrator Registration',
+      route: '/signupUser/admin',
     },
     PROFILE       : {
       key  : 'PROFILE',
@@ -39,19 +64,5 @@ const PAGES = {
     },
   },
 };
-
-PAGES.ALL = {
-  APPLICATION: [
-    PAGES.APPLICATION.HOME,
-    PAGES.APPLICATION.ABOUT,
-  ],
-  USER       : [
-    PAGES.USER.LOGIN,
-    PAGES.USER.LOGOUT,
-    PAGES.USER.RESET_PASSWORD,
-    PAGES.USER.SIGNUP,
-    PAGES.USER.PROFILE,
-  ]
-}
 
 export default PAGES;

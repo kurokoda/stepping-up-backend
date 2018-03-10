@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
+
 class HomeContainer extends Component {
   static propTypes = {
     'Layout': PropTypes.func.isRequired
@@ -10,15 +11,20 @@ class HomeContainer extends Component {
   static defaultProps = {};
 
   render() {
-    const {Layout} = this.props;
+    const {Layout}    = this.props;
+    const layoutProps = {
+      showAuthContainer: !this.props.user,
+    };
 
     return (
-      <Layout/>
+      <Layout {...layoutProps}/>
     );
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  user: state.user,
+});
 
 const mapDispatchToProps = {};
 
