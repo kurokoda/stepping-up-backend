@@ -1,7 +1,6 @@
 const User = require('../schema/user');
 
 module.exports.login = (req, res) => {
-  console.log('login request received', req.body);
   User.authenticate(req.body.email, req.body.password, function (error, user) {
     if (error || !user) {
       const err  = new Error('Wrong email or password.');
@@ -10,7 +9,8 @@ module.exports.login = (req, res) => {
       res.send(err);
     } else {
       console.log('login request approved');
-      res.status(200).send({express: 'signup request received', params: req.body});
+      req.session.userId = user._id;
+      res.status(200).send({express: 'signup request received'});
     }
   });
 };
@@ -20,7 +20,7 @@ module.exports.logout = (req, res) => {
     // delete session object
     req.session.destroy(function (err) {
       if (err) {
-        return next(err);
+        res.status(500).send({express: 'logout error', params: req.body});
       } else {
         console.log('logout successful');
         res.status(200).send({express: 'logout successful', params: req.body});

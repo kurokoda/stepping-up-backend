@@ -40,7 +40,6 @@ app.use(session({
   saveUninitialized: false
 }));
 
-
 // Routing ----------------------------------------------------------------------
 
 app.get('/api/hello', (req, res) => {

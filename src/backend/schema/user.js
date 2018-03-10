@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt   = require('bcrypt');
+
 
 const UserSchema = new mongoose.Schema({
   email   : {
@@ -19,25 +21,35 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+UserSchema.pre('save', function (next) {
+  const user = this;
+  bcrypt.hash(user.password, 10, function (err, hash) {
+    if (err) {
+      return next(err);
+    }
+    user.password = hash;
+    next();
+  })
+});
+
 UserSchema.statics.authenticate = function (email, password, callback) {
-  console.log(email);
   User.findOne({email: email})
   .exec(function (err, user) {
-    // if (err) {
-    //   return callback(err)
-    // } else if (!user) {
-    //   const err    = new Error('User not found.');
-    //   err.status = 401;
-    //   return callback(err);
-    // }
-    // bcrypt.compare(password, user.password, function (err, result) {
-    //   if (result === true) {
-    //     return callback(null, user);
-    //   } else {
-    //     return callback();
-    //   }
-    // })
-    console.log(user);
+    if (err) {
+      return callback(err)
+    } else if (!user) {
+      const err  = new Error('User not found.');
+      err.status = 401;
+      return callback(err);
+    }
+    bcrypt.compare(password, user.password, function (err, result) {
+      console.log(password, user.password);
+      if (result === true) {
+        return callback(null, user);
+      } else {
+        return callback();
+      }
+    })
   });
 };
 
