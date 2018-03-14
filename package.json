@@ -1,5 +1,5 @@
 {
-  "name": "react-web-express",
+  "name": "stepping-up-backend",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -26,7 +26,6 @@
     "babel-preset-stage-2": "^6.24.1"
   },
   "scripts": {
-    "heroku-postbuild": "cd src/frontend && yarn --production=false && yarn run build",
-    "start": "nodemon src/backend/index.js"
+    "start": "nodemon src/index.js"
   }
 }
