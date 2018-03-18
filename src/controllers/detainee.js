@@ -35,10 +35,12 @@ module.exports.seed = () => {
 };
 
 module.exports.get = (req, res) => {
+  console.log('user_id', req.session.userId);
   console.log('get detainee');
 };
 
 module.exports.post = (req, res) => {
+  console.log('user_id', req.session);
   console.log('post detainee');
 };
 
@@ -51,6 +53,7 @@ module.exports.delete = (req, res) => {
 };
 
 module.exports.all = (req, res) => {
+  console.log('user_id', req.session);
   Detainee.find({}, (err, detainees) => {
     if (err) {
       console.log('Error finding detainees', err);

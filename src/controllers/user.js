@@ -154,20 +154,25 @@ module.exports.seed = () => {
 module.exports.login = (req, res) => {
   User.authenticate(req.body.email, req.body.password, function (error, user) {
     if (error || !user) {
-      console.log('login fail')
+      console.log('login fail');
       const err  = new Error('Wrong email or password.');
       err.status = 401;
       res.status(401).send(err);
     } else {
-      console.log('login success');
       req.session.userId = user._id;
       res.status(200).send(user);
+      console.log('login: success');
+      console.log('Session id:', req.session.id);
+      console.log('Session:', req.session);
     }
   });
 };
 
 module.exports.logout = (req, res) => {
   if (req.session) {
+    console.log('logout: success');
+    console.log('Session id:', req.session.id);
+    console.log('Session:', req.session);
     req.session.destroy(function (err) {
       if (err) {
         res.status(500).send({express: 'logout error', params: req.body});
