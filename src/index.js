@@ -17,6 +17,7 @@ const MongoStore = require('connect-mongo')(session);
 
 const app = express();
 
+const isProduction = process.env.NODE_ENV != 'development';
 
 // Mongoose DB ----------------------------------------------------------------------
 
@@ -50,6 +51,8 @@ const corsConfig = {
   optionsSuccessStatus: 200,
 };
 
+console.log(process.env.NODE_ENV);
+
 const storeConfig = {
   mongooseConnection: mongoose.connection,
 };
@@ -61,8 +64,8 @@ const sessionConfig = {
   saveUninitialized: false,
   store            : new MongoStore(storeConfig),
   cookie           : {
-    secure  : false,
-    httpOnly: false,
+    secure  : isProduction,
+    httpOnly: isProduction,
     expires : new Date(Date.now() + 60 * 60 * 1000)
   }
 };
