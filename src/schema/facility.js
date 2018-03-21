@@ -1,48 +1,50 @@
 const mongoose = require('mongoose');
+const id       = 'Facility';
 
-const id = 'Facility';
+// TODO add type precision
 
-const FacilitySchema = new mongoose.Schema({
-  id     : {
+const Schema = new mongoose.Schema({
+  facilityID: {
     type    : String,
     required: true,
     trim    : true,
     unique  : true,
   },
-  name   : {
+  name      : {
     type    : String,
     required: true,
     trim    : true
   },
-  address: {
+  address   : {
     type    : String,
     required: true,
     trim    : true,
   },
-  city   : {
+  city      : {
     type    : String,
     required: true,
     trim    : true,
   },
-  state  : {
+  state     : {
     type    : String,
     required: true,
     trim    : true,
   },
-  zip    : {
+  zip       : {
     type    : String,
     required: true,
     trim    : true,
   },
 });
 
-FacilitySchema.methods.toJSON = function () {
+// TODO upddate output filtering
+
+Schema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
   delete obj.v;
   return obj;
 };
 
-const Model = mongoose.model(id, FacilitySchema);
-
-module.exports = Model;
+const Facility = mongoose.model('Facility', Schema);
+module.exports = Facility;

@@ -27,21 +27,22 @@ if (config.MONGO_URI) {
   database.on('connect', console.log.bind(console, 'connection success:'));
   database.on('error', console.error.bind(console, 'connection error:'));
   database.once('open', function () {
-    // const facilityController = require('./controllers/facility');
-    // const detaineeController = require('./controllers/detainee');
-    // const userController     = require('./controllers/user');
-    // facilityController.seed();
-    // userController.seed();
-    // detaineeController.seed();
+    const facilityController = require('./controllers/facility');
+    const detaineeController = require('./controllers/detainee');
+    const userController     = require('./controllers/user');
+    facilityController.seed();
+    userController.seed();
+    detaineeController.seed();
   });
 }
 
-// Set ----------------------------------------------------------------------
+
+// Setings ----------------------------------------------------------------------
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// Use ----------------------------------------------------------------------
+// Middleware ----------------------------------------------------------------------
 
 const corsConfig = {
   origin              : ['http://localhost:3000', 'https://stepping-up-frontend.herokuapp.com'],
@@ -50,8 +51,6 @@ const corsConfig = {
   credentials         : true,
   optionsSuccessStatus: 200,
 };
-
-console.log(process.env.NODE_ENV);
 
 const storeConfig = {
   mongooseConnection: mongoose.connection,
@@ -64,8 +63,8 @@ const sessionConfig = {
   saveUninitialized: false,
   store            : new MongoStore(storeConfig),
   cookie           : {
-    secure  : isProduction,
-    httpOnly: isProduction,
+    secure  : false,
+    httpOnly: true,
     expires : new Date(Date.now() + 60 * 60 * 1000)
   }
 };
@@ -77,14 +76,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
-// Routing ----------------------------------------------------------------------
-
-app.get('/test', (req, res) => {
-  res.status(200).send({data: 'test'});
-  console.log('test: success');
-  console.log('Session id:', req.session.id);
-  console.log('Session:', req.session);
-});
+// Routing middleware----------------------------------------------------------------------
 
 app.use(questionRouter);
 app.use(userRouter);
@@ -93,7 +85,7 @@ app.use(facilityRouter);
 app.use(detaineeRouter);
 
 
-// Error Handling ----------------------------------------------------------------------
+// Error middleware ----------------------------------------------------------------------
 
 app.use(function (req, res, next) {
   const err  = new Error('Not Found');

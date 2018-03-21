@@ -1,21 +1,26 @@
 const Schema = require('../schema/screen');
 
-module.exports.get = (req, res) => {
-  console.log('get screen');
-};
+// create -------------------------------------------------------------------
 
 module.exports.post = (req, res) => {
-  console.log('post screen');
 };
 
-module.exports.patch = (req, res) => {
-  console.log('patch screen');
-};
-
-module.exports.delete = (req, res) => {
-  console.log('delete screen');
-};
+// read all -------------------------------------------------------------------
 
 module.exports.all = (req, res) => {
-  console.log('get all screens');
+};
+
+// read -------------------------------------------------------------------
+
+module.exports.get = (req, res) => {
+};
+
+// update -------------------------------------------------------------------
+
+module.exports.patch = (req, res) => {
+};
+
+// delete -------------------------------------------------------------------
+
+module.exports.delete = (req, res) => {
 };

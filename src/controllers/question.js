@@ -1,21 +1,21 @@
 const Schema = require('../schema/question');
 
-module.exports.get = (req, res) => {
-  console.log('get question');
-};
+// create -------------------------------------------------------------------
 
-module.exports.post = (req, res) => {
-  console.log('post question');
-};
+module.exports.post = (req, res) => {};
 
-module.exports.patch = (req, res) => {
-  console.log('patch question');
-};
+// read all -------------------------------------------------------------------
 
-module.exports.delete = (req, res) => {
-  console.log('delete question');
-};
+module.exports.all = (req, res) => {};
 
-module.exports.all = (req, res) => {
-  console.log('get all questions');
-};
+// read -------------------------------------------------------------------
+
+module.exports.get = (req, res) => {};
+
+// update -------------------------------------------------------------------
+
+module.exports.patch = (req, res) => {};
+
+// delete -------------------------------------------------------------------
+
+module.exports.delete = (req, res) => {};

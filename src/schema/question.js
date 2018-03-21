@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
+const id       = 'Question';
 
-const id = 'Question';
+// TODO add type precision
 
 const Schema = new mongoose.Schema({});
 
-const Model = mongoose.model(id, Schema);
+// TODO add output filtering
 
-module.exports = Model;
+const Question = mongoose.model('Question', Schema);
+module.exports = Question;
