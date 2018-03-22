@@ -2,7 +2,7 @@ module.exports = {
   SUCCESS_200       : (data) => {
     return {msg: '200: Success', body: data}
   },
-  NOT_AUTHORIZED_403: (data) => {
+  NOT_AUTHORIZED_401: (data) => {
     return {msg: '403: User is not authorized to access this data', body: data}
   },
   NOT_FOUND_404     : (data) => {

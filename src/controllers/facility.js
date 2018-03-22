@@ -1,6 +1,7 @@
 const RESPONSE = require('../constants/response');
 const Facility = require('../schema/facility');
 const logging  = require('../service/logging');
+const doLog    = false;
 
 // seed -------------------------------------------------------------------
 
@@ -45,22 +46,24 @@ module.exports.seed = () => {
       };
       Facility.create(facilityData, (error, facility) => {
         if (error) {
-          console.log('Error creating facility', error);
+          doLog && console.log('create error', error.errmsg);
         } else {
-          // console.log('Facility created!', facility);
+          // doLog && console.log('Facility created!', facility);
         }
       });
     }
   })
   .catch(error => {
-    console.log(error);
+    doLog && console.log(error);
   });
 };
 
 // create -------------------------------------------------------------------
 
 module.exports.post = (req, res) => {
-  if (!req.session.user) return res.status(403).send(RESPONSE.NOT_AUTHORIZED_403);
+  if (!req.session.user) {
+    return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
+  }
   const action = 'create_facility';
   const userID = req.session.user._id;
   if (
@@ -74,40 +77,41 @@ module.exports.post = (req, res) => {
     const facilityData = {
       facilityID: req.body.facilityID,
       name      : req.body.name,
-      lastName  : req.body.lastName,
       address   : req.body.address,
       city      : req.body.city,
       state     : req.body.state,
       zip       : req.body.zip,
     };
-    Facility.create(facilityData, function (error) {
+    Facility.create(facilityData, function (error, facility) {
+      doLog && console.log(`create facility result: ${facility}`);
       if (error) {
-        res.status(403).send(RESPONSE.NOT_AUTHORIZED_403);
+        logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+        res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
       } else {
-        logging.logUserAction({action, userID});
+        logging.logUserAction({action, userID, ip: req.ip});
         res.status(200).send();
       }
     })
   } else {
     const code = 403;
-    const date = new Date();
-    logging.logApiError({action, code, date, error: {msg: 'required data not provided'}});
-    console.log(error);
+    logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
   }
 };
 
 // read all -------------------------------------------------------------------
 
 module.exports.all = (req, res) => {
-  if (!req.session.user.isRoot) return res.status(403).send(RESPONSE.NOT_AUTHORIZED_403());
+  if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
   const action = 'get_facilities';
   const userID = req.session.user._id;
   Facility.find({}, (error, facilities) => {
+    doLog && console.log(`get facilities result: ${facilities}`);
     if (error) {
-      res.status(404).send(RESPONSE.NOT_FOUND_404());
+      logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+      res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
     } else {
-      logging.logUserAction({action, userID});
-      res.status(200).send(RESPONSE.SUCCESS_200(facilities));
+      logging.logUserAction({action, userID, ip: req.ip});
+      res.status(200).send(facilities);
     }
   })
 };
@@ -115,15 +119,21 @@ module.exports.all = (req, res) => {
 // read -------------------------------------------------------------------
 
 module.exports.get = (req, res) => {
-  if (!req.session.user) return res.status(403).send(RESPONSE.NOT_AUTHORIZED_403);
-  const action     = 'get_facility';
-  const userID     = req.session.user._id;
-  const facilityID = req.session.user.facilityID;
-  Facility.findOne({facilityID}, (error, facility) => {
+  if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
+  const action         = 'get_facility';
+  const userID         = req.session.user._id;
+  const userFacility   = req.session.user.facilityID;
+  const targetFacility = req.params.id;
+  Facility.findOne({
+    facilityID: userFacility,
+    facilityID: targetFacility,
+  }, (error, facility) => {
+    doLog && console.log(`get facility result: ${facility}`);
     if (error) {
-      res.status(404).send(RESPONSE.NOT_FOUND_404);
+      logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+      res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
     } else {
-      logging.logUserAction({action, userID});
+      logging.logUserAction({action, userID, targetID: targetFacility, ip: req.ip});
       res.status(200).send(facility);
     }
   })
@@ -136,18 +146,23 @@ module.exports.patch = (req, res) => {
 
 // delete -------------------------------------------------------------------
 
-
 module.exports.delete = (req, res) => {
-  if (!req.session.user.isRoot) return res.status(403).send(RESPONSE.NOT_AUTHORIZED_403());
-  const action     = 'delete_facility';
-  const userID     = req.session.user._id;
-  const facilityID = req.session.user.facilityID;
-  Facility.remove({facilityID}, (error, facility) => {
+  if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
+  const action         = 'delete_facility';
+  const userID         = req.session.user._id;
+  const userFacility   = req.session.user.facilityID;
+  const targetFacility = req.params.id;
+  Facility.findOneAndRemove({
+    facilityID: userFacility,
+    facilityID: targetFacility,
+  }, (error, facility) => {
+    doLog && console.log(`delete facility result: ${facility}`);
     if (error) {
-      res.status(404).send(RESPONSE.NOT_FOUND_404());
+      logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+      res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
     } else {
-      logging.logUserAction({action, userID});
-      res.status(200).send(RESPONSE.SUCCESS_200(facility));
+      logging.logUserAction({action, userID, targetID: targetFacility, ip: req.ip});
+      res.status(200).send();
     }
   })
 };

@@ -5,21 +5,26 @@ const router     = express.Router();
 
 // auth:login -------------------------------------------------------------------
 
-router.post('/api/user/login', (req, res) => {
+router.post(`${route}login`, (req, res) => {
   controller.login(req, res);
 });
 
 // auth:logout -------------------------------------------------------------------
 
-router.post('/api/user/logout', (req, res) => {
+router.post(`${route}logout`, (req, res) => {
   controller.logout(req, res);
 });
 
-// create -------------------------------------------------------------------
+// signup -------------------------------------------------------------------
 
-router.post('/api/user/signup', (req, res) => {
-  console.log('signup')
+router.post(`${route}signup`, (req, res) => {
   controller.signup(req, res);
+});
+
+// signup -------------------------------------------------------------------
+
+router.post(route, (req, res) => {
+  controller.post(req, res);
 });
 
 // read all -------------------------------------------------------------------

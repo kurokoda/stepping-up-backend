@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const id       = 'Facility';
 
 // TODO add type precision
 

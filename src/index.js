@@ -24,8 +24,9 @@ const isProduction = process.env.NODE_ENV != 'development';
 if (config.MONGO_URI) {
   const database = mongoose.connection;
   mongoose.connect(config.MONGO_URI);
-  database.on('connect', console.log.bind(console, 'connection success:'));
-  database.on('error', console.error.bind(console, 'connection error:'));
+  console.log('db connection attempt')
+  database.on('connect', console.log.bind(console, 'db connection success:'));
+  database.on('error', console.error.bind(console, 'db connection error:'));
   database.once('open', function () {
     const facilityController = require('./controllers/facility');
     const detaineeController = require('./controllers/detainee');
@@ -44,10 +45,12 @@ app.set('view engine', 'jade');
 
 // Middleware ----------------------------------------------------------------------
 
+const origin = isProduction ? 'https://stepping-up-frontend.herokuapp.com' : 'http://localhost:3000'
+
 const corsConfig = {
-  origin              : ['http://localhost:3000', 'https://stepping-up-frontend.herokuapp.com'],
+  origin,
   allowedHeaders      : ['Content-Type', 'Authorization', 'Content-Length', 'X-Requested-With', 'Accept', 'Cache'],
-  methods             : ['GET', 'POST'],
+  methods             : ['GET', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials         : true,
   optionsSuccessStatus: 200,
 };

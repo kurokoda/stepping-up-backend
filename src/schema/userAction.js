@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const id       = 'Schema';
 
 // TODO add type precision
 
@@ -17,6 +16,10 @@ const Schema = new mongoose.Schema({
     trim: true,
   },
   targetID: {
+    type: String,
+    trim: true,
+  },
+  ip: {
     type: String,
     trim: true,
   },

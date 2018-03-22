@@ -1,6 +1,7 @@
 const RESPONSE = require('../constants/response');
 const Detainee = require('../schema/detainee');
 const logging  = require('../service/logging');
+const doLog    = true;
 
 // seed -------------------------------------------------------------------
 
@@ -43,15 +44,19 @@ module.exports.seed = () => {
 // read all -------------------------------------------------------------------
 
 module.exports.all = (req, res) => {
-  if (!req.session.user) return res.status(403).send(RESPONSE.NOT_AUTHORIZED_403);
-  const action     = 'get_detainees';
-  const userID     = req.session.user._id;
-  const facilityID = req.session.user.facilityID;
-  Detainee.find({facilityID}, (error, detainees) => {
+  if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
+  const action         = 'get_detainees';
+  const userFacilityID = req.session.user.facilityID;
+  Detainee.find({
+    facilityID: userFacilityID
+  }, (error, detainees) => {
+    console.log(detainees);
+    doLog && console.log(`get detainees result: ${detainees}`);
     if (error) {
-      res.status(404).send(RESPONSE.NOT_FOUND_404);
+      logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+      res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
     } else {
-      logging.logUserAction({action, userID});
+      logging.logUserAction({action, userID: req.session.user._id, ip: req.ip});
       res.status(200).send(detainees);
     }
   })
@@ -60,16 +65,21 @@ module.exports.all = (req, res) => {
 // read -------------------------------------------------------------------
 
 module.exports.get = (req, res) => {
-  if (!req.session.user) return res.status(403).send(RESPONSE.NOT_AUTHORIZED_403);
+  if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
   const action     = 'get_detainee';
   const userID     = req.session.user._id;
   const facilityID = req.session.user.facilityID;
-  const detaineeID = req.body.detineeID;
-  Detainee.findOne({facilityID, detaineeID}, (error, detainee) => {
+  const detaineeID = req.params.id;
+  Detainee.findOne({
+    facilityID,
+    detaineeID,
+  }, (error, detainee) => {
+    doLog && console.log(`get detainee result: ${detainee} (if value is null there may be no user with this id at the requestor's facility)`);
     if (error) {
-      res.status(404).send(RESPONSE.NOT_FOUND_404);
+      logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+      res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
     } else {
-      logging.logUserAction({action, userID});
+      logging.logUserAction({action, userID, ip: req.ip});
       res.status(200).send(detainee);
     }
   })
@@ -78,7 +88,7 @@ module.exports.get = (req, res) => {
 // create -------------------------------------------------------------------
 
 module.exports.post = (req, res) => {
-  if (!req.session.user) return res.status(403).send(RESPONSE.NOT_AUTHORIZED_403);
+  if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
   const action = 'create_detainee';
   const userID = req.session.user._id;
   if (
@@ -95,19 +105,18 @@ module.exports.post = (req, res) => {
       gender    : req.body.gender,
       facilityID: req.body.facilityID,
     };
-    Detainee.create(detaineeData, function (error) {
+    Detainee.create(detaineeData, function (error, detainee) {
+      doLog && console.log(`create detainee result: ${detainee}`);
       if (error) {
-        res.status(403).send(RESPONSE.NOT_AUTHORIZED_403);
+        logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+        res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
       } else {
-        logging.logUserAction({action, userID});
+        logging.logUserAction({action, userID, ip: req.ip});
         res.status(200).send();
       }
     })
   } else {
-    const code = 403;
-    const date = new Date();
-    logging.logApiError({action, code, date, error: {msg: 'required data not provided'}});
-    console.log(error);
+    logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
   }
 };
 
@@ -119,17 +128,23 @@ module.exports.patch = (req, res) => {
 // delete -------------------------------------------------------------------
 
 module.exports.delete = (req, res) => {
-  if (!req.session.user) return res.status(403).send(RESPONSE.NOT_AUTHORIZED_403);
-  const action     = 'delete_detainee';
+  if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
+  const action     = 'create_detainee';
   const userID     = req.session.user._id;
   const facilityID = req.session.user.facilityID;
-  const detaineeID = req.body.detineeID;
-  Detainee.remove({facilityID, detaineeID}, (error, detainee) => {
+  const detaineeID = req.params.id;
+  Detainee.findOneAndRemove({
+    facilityID,
+    detaineeID,
+  }, (error, detainee) => {
+    console.log(detainee._ct);
+    doLog && console.log(`delete detainee result: ${detainee} (if value is null there may be no user with this id at the requestor's facility)`);
     if (error) {
-      res.status(404).send(RESPONSE.NOT_FOUND_404);
+      logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+      res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
     } else {
-      logging.logUserAction({action, userID});
-      res.status(200).send(detainee);
+      logging.logUserAction({action, userID, detaineeID, ip: req.ip});
+      res.status(200).send();
     }
   })
-};
+}

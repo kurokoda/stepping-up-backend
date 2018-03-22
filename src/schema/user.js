@@ -33,6 +33,11 @@ const Schema = new mongoose.Schema({
     type    : String,
     required: true,
   },
+  userID    : {
+    type    : String,
+    unique  : true,
+    required: true,
+  },
   admin     : {
     type: Boolean,
   },

@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
-const id       = 'ApiError';
 
 // TODO add type precision
 
 const Schema = new mongoose.Schema({
+  userID: {
+    type: String,
+    trim: true,
+  },
   date  : {
     type: String,
     trim: true,
@@ -16,8 +19,12 @@ const Schema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  error : {
+  ip    : {
     type: String,
+    trim: true,
+  },
+  error : {
+    type: Object,
     trim: true,
   },
 });

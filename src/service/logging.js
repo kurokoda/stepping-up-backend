@@ -5,47 +5,52 @@ const ApiError   = require('../schema/ApiError');
 module.exports.logUserAction = (data) => {
   if (
     data.userID &&
-    data.action
+    data.action &&
+    data.ip
   ) {
     const userActionData = {
       userID  : data.userID,
-      targetID: data.targetID,
+      targetID: data.targetID || null,
+      ip      : data.ip,
       action  : data.action,
       date    : new Date(),
     };
-    UserAction.create(userActionData, function (err) {
-      if (err) {
-        console.log('userActionLog error:', err)
+    UserAction.create(userActionData, function (error) {
+      if (error) {
+        // console.log('userActionLog error:', error)
       } else {
-        console.log('userActionLog success', userActionData)
+        // console.log('userActionLog success', userActionData)
       }
     });
   } else {
-    console.log('logUserAction: Required data not provided')
+    // console.log(`logUserAction: userID or action type not provided. userID: ${data.userID} action: ${data.action}`)
   }
 };
 
 module.exports.logApiError = (data) => {
-  console.log(data);
   if (
+    data.userID &&
     data.action &&
     data.code &&
-    data.error
+    data.error &&
+    data.ip
   ) {
     const apiErrorData = {
-      action: data.type,
+      action: data.action,
+      userID: data.userID,
       code  : data.code,
-      error : data.action,
+      error : data.error,
+      ip    : data.ip,
       date  : new Date(),
     };
-    ApiError.create(apiErrorData, function (err) {
-      if (err) {
-        console.log('userActionLog error: ', err)
+    ApiError.create(apiErrorData, function (error) {
+      if (error) {
+        // console.log('userActionLog error: ', error)
       } else {
-        console.log('userActionLog success: ', apiErrorData)
+        // console.error('logApiError success: ', apiErrorData)
       }
     });
   } else {
-    console.log('NOT DOING IT', data);
+    console.error(`logApiError: userID or action type not provided. userID: ${data.userID} action: ${data.action}`)
   }
 };
