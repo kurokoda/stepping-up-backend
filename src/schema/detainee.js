@@ -28,19 +28,18 @@ const Schema = new mongoose.Schema({
   },
 });
 
-// const encrypt  = require('mongoose-encryption');
-// Schema.plugin(encrypt, {
-//   // encryptionKey        : config.SOME_32BYTE_BASE64_STRING,
-//   // signingKey           : config.SOME_64BYTE_BASE64_STRING,
-//   secret               : 'zxcuhiurwhkjhzciolknejbcdubkjbsdkbka',
-//   excludeFromEncryption: ['facilityID', 'detaineeID']
-// });
-
 Schema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.v;
   return obj;
 };
+const CryptoJS        = require('crypto-js');
+
+const data = [{id: 1}, {id: 2}]
+
+const ciphertext    = CryptoJS.AES.encrypt(JSON.stringify(data), config.CRYPTO_PASSWORD);
+const bytes         = CryptoJS.AES.decrypt(ciphertext.toString(), config.CRYPTO_PASSWORD);
+const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
 const Detainee = mongoose.model('Detainee', Schema);
 

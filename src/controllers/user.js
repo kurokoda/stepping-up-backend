@@ -1,169 +1,123 @@
 const RESPONSE = require('../constants/response');
 const User     = require('../schema/user');
 const logging  = require('../service/logging');
-const sid      = require('shortid');
-const doLog    = false;
+const auth     = require('../service/auth');
+
+const doLog = false;
 
 // seed -------------------------------------------------------------------
 
 module.exports.seed = () => {
   const users = [
     {
-      firstName : 'Norman',
-      lastName  : 'Snyder',
-      email     : 'userone@gmail.com',
-      username  : 'normanSnyder',
+      firstName : 'Ian',
+      lastName  : 'Greenough',
+      email     : 'one@admin.com',
+      username  : 'indigo',
       password  : 'password',
       facilityID: '100',
-      userID    : sid.generate(),
       admin     : true,
       counselor : null,
     },
     {
       firstName : 'Bertha',
       lastName  : 'Martinez',
-      email     : 'usertwo@gmail.com',
+      email     : 'one@counselor.com',
       username  : 'berthaMartinez',
       password  : 'password',
       facilityID: '100',
-      userID    : sid.generate(),
       admin     : null,
       counselor : true,
     },
     {
       firstName : 'Bella',
       lastName  : 'Bailey',
-      email     : 'userthree@gmail.com',
+      email     : 'two@admin.com',
       username  : 'bellaBailey',
       password  : 'password',
-      facilityID: '100',
-      userID    : sid.generate(),
-      admin     : null,
+      facilityID: '101',
+      admin     : true,
       counselor : null,
     },
     {
       firstName : 'Dan',
       lastName  : 'Lawson',
-      email     : 'userfive@gmail.com',
+      email     : 'two@counselor.com',
       username  : 'danLawson',
       password  : 'password',
-      facilityID: '100',
-      userID    : sid.generate(),
+      facilityID: '101',
       admin     : null,
-      counselor : null,
+      counselor : true,
     },
     {
       firstName : 'Irma',
       lastName  : 'Williams',
-      email     : 'usersix@gmail.com',
+      email     : 'three@admin.com',
       username  : 'irmaWilliams',
       password  : 'password',
-      facilityID: '101',
-      userID    : sid.generate(),
+      facilityID: '102',
       admin     : true,
       counselor : null,
     },
     {
       firstName : 'Armando',
       lastName  : 'Harper',
-      email     : 'userseven@gmail.com',
+      email     : 'three@couselor.com',
       username  : 'armandoHarper',
       password  : 'password',
-      facilityID: '101',
-      userID    : sid.generate(),
+      facilityID: '102',
       admin     : null,
       counselor : true,
-    },
-    {
-      firstName : 'Jacob',
-      lastName  : 'Adams',
-      email     : 'usereight@gmail.com',
-      username  : 'jacobAdams',
-      password  : 'password',
-      facilityID: '101',
-      userID    : sid.generate(),
-      admin     : null,
-      counselor : null,
-    },
-    {
-      firstName : 'Soham',
-      lastName  : 'Silva',
-      email     : 'usernine@gmail.com',
-      username  : 'sohamSilva',
-      password  : 'password',
-      facilityID: '101',
-      userID    : sid.generate(),
-      admin     : null,
-      counselor : null,
-    },
-    {
-      firstName : 'Sue',
-      lastName  : 'Kelley',
-      email     : 'userten@gmail.com',
-      username  : 'sueKelley',
-      password  : 'password',
-      facilityID: '102',
-      userID    : sid.generate(),
-      admin     : true,
-      counselor : null,
-    },
-    {
-      firstName : 'June',
-      lastName  : 'Phillips',
-      email     : 'usereleven@gmail.com',
-      username  : 'junePhillips',
-      password  : 'password',
-      facilityID: '102',
-      userID    : sid.generate(),
-      admin     : null,
-      counselor : true,
-    },
-    {
-      firstName : 'April',
-      lastName  : 'Ortiz',
-      email     : 'usertwelve@gmail.com',
-      username  : 'aprilOrtiz',
-      password  : 'password',
-      facilityID: '102',
-      userID    : sid.generate(),
-      admin     : null,
-      counselor : null,
-    },
-    {
-      firstName : 'Roger',
-      lastName  : 'Pierce',
-      email     : 'userthirteen@gmail.com',
-      username  : 'rogerPierce',
-      password  : 'password',
-      facilityID: '102',
-      userID    : sid.generate(),
-      admin     : null,
-      counselor : null,
     },
   ];
 
-  User.remove({}, () => {
-    for (let i = 0; i < users.length; i++) {
-      const data     = users[i];
-      const userData = {
-        firstName : data.firstName,
-        lastName  : data.lastName,
-        email     : data.email,
-        username  : data.username,
-        password  : data.password,
-        facilityID: data.facilityID,
-        userID    : data.userID,
-        admin     : data.admin,
-        counselor : data.counselor,
-      };
-      User.create(userData, (error, user) => {
-        if (error) {
-          console.log('Error creating user', error);
-        } else {
-          //console.log('User created!', user);
+  const url         = 'https://randomuser.me/api/?results=30&nat=us';
+  const facilityIDs = ['100', '101', '102'];
+  const fetch       = require('node-fetch');
+
+  fetch(url)
+  .then(response => {
+    response.json().then(json => {
+      User.remove({}, () => {
+        for (let i = 0; i < json.results.length; i++) {
+          const result        = json.results[i];
+          const facilityIndex = Math.floor(Math.random() * facilityIDs.length);
+          const admin         = Math.floor(Math.random() * 10) === 0;
+          const counselor     = admin ? false : Math.floor(Math.random() * 5) === 0;
+          users.push({
+            firstName : result.name.first,
+            lastName  : result.name.last,
+            email     : result.email,
+            username  : result.login.username,
+            password  : 'password',
+            facilityID: facilityIDs[facilityIndex],
+            admin,
+            counselor,
+          })
+        }
+        for (let j = 0; j < users.length; j++) {
+          const user     = users[j];
+          const userData = {
+            firstName : user.firstName,
+            lastName  : user.lastName,
+            email     : user.email,
+            username  : user.username,
+            password  : user.password,
+            facilityID: user.facilityID,
+            userID    : auth.generateID(6),
+            admin     : user.admin,
+            counselor : user.counselor,
+          };
+          User.create(userData, (error, user) => {
+            if (error) {
+              console.log('Error creating user', error);
+            } else {
+              // console.log(user);
+            }
+          });
         }
       });
-    }
+    });
   })
   .catch(error => {
     console.log(error);
@@ -176,11 +130,11 @@ module.exports.login = (req, res) => {
   console.log('login', req.body.email, req.body.password);
   User.authenticate(req.body.email, req.body.password, function (error, user) {
     if (error || !user) {
-      console.log('failure', error, user);
       const error  = new Error('Wrong email or password.');
       error.status = 401;
       res.status(401).send(error);
     } else {
+      console.log('login success', user);
       req.session.user = user;
       res.status(200).send(user);
     }
@@ -190,14 +144,19 @@ module.exports.login = (req, res) => {
 // auth:logout -------------------------------------------------------------------
 
 module.exports.logout = (req, res) => {
+  console.log('IT BEGINS', req.session);
   if (req.session) {
     req.session.destroy(function (error) {
       if (error) {
         res.status(500).send({express: 'logout error', params: req.body});
       } else {
         res.status(200).send({express: 'logout successful', params: req.body});
+        console.log('AND HERE I GO');
       }
     });
+  } else {
+    console.log('AND HERE I GO');
+    res.status(200).send({express: 'logout successful', params: req.body});
   }
 };
 
@@ -220,7 +179,7 @@ module.exports.signup = (req, res) => {
       username  : req.body.username,
       password  : req.body.password,
       facilityID: req.body.facilityID,
-      userID    : sid.generate(),
+      userID    : auth.generateID(6),
     };
     User.create(userData, function (error) {
       if (error) {
@@ -266,7 +225,7 @@ module.exports.post = (req, res) => {
       userID    : req.body.userID,
     };
     User.create(userData, function (error, user) {
-      doLog && console.log(`create user result: ${user}`);
+
       if (error) {
         logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
         res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
@@ -281,28 +240,7 @@ module.exports.post = (req, res) => {
   }
 };
 
-// read all -------------------------------------------------------------------
-
-module.exports.all = (req, res) => {
-  if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
-  const action     = 'get_users';
-  const userID     = req.session.user._id;
-  const facilityID = req.session.user.facilityID;
-  User.find({
-    facilityID
-  }, (error, users) => {
-    doLog && console.log(`get users result: ${users}`);
-    if (error) {
-      logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
-      res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
-    } else {
-      logging.logUserAction({action, userID, ip: req.ip});
-      res.status(200).send(users);
-    }
-  })
-};
-
-// read -------------------------------------------------------------------
+// retrieve -------------------------------------------------------------------
 
 module.exports.get = (req, res) => {
   if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
@@ -314,7 +252,7 @@ module.exports.get = (req, res) => {
     facilityID,
     userID: targetUserID,
   }, (error, user) => {
-    doLog && console.log(`get user result: ${user} (if value is null there may be no user with this id at the requestor's facility)`);
+
     if (error) {
       logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
       res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
@@ -342,7 +280,7 @@ module.exports.delete = (req, res) => {
     facilityID,
     userID: targetUserID,
   }, (error, user) => {
-    doLog && console.log(`delete user result: ${user} (if value is null there may be no user with this id at the requestor's facility)`);
+
     if (error) {
       logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
       res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
@@ -353,6 +291,15 @@ module.exports.delete = (req, res) => {
   })
 };
 
+// validate -------------------------------------------------------------------
 
-
-
+module.exports.synchronizeUserSession = (req, res) => {
+  console.log('request session id:', req.session.user ? req.session.user.userID : undefined);
+  console.log('request user id:', req.params.id);
+  const doesRequestUserMatchSessionUser = (req.session.user ? req.session.user.userID === req.params.id : false);
+  if(doesRequestUserMatchSessionUser){
+    res.status(200).send();
+  } else {
+    res.status(404).send();
+  }
+};

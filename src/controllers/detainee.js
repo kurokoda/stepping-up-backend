@@ -1,7 +1,6 @@
 const RESPONSE = require('../constants/response');
 const Detainee = require('../schema/detainee');
 const logging  = require('../service/logging');
-const doLog    = true;
 
 // seed -------------------------------------------------------------------
 
@@ -9,7 +8,6 @@ module.exports.seed = () => {
   const url         = 'https://randomuser.me/api/?results=50&nat=us';
   const facilityIDs = ['100', '101', '102'];
   const fetch       = require('node-fetch');
-
   fetch(url)
   .then(response => {
     response.json().then(json => {
@@ -45,13 +43,8 @@ module.exports.seed = () => {
 
 module.exports.all = (req, res) => {
   if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
-  const action         = 'get_detainees';
-  const userFacilityID = req.session.user.facilityID;
-  Detainee.find({
-    facilityID: userFacilityID
-  }, (error, detainees) => {
-    console.log(detainees);
-    doLog && console.log(`get detainees result: ${detainees}`);
+  const action = 'get_detainees';
+  Detainee.find({}, (error, detainees) => {
     if (error) {
       logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
       res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
@@ -74,7 +67,6 @@ module.exports.get = (req, res) => {
     facilityID,
     detaineeID,
   }, (error, detainee) => {
-    doLog && console.log(`get detainee result: ${detainee} (if value is null there may be no user with this id at the requestor's facility)`);
     if (error) {
       logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
       res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
@@ -106,7 +98,7 @@ module.exports.post = (req, res) => {
       facilityID: req.body.facilityID,
     };
     Detainee.create(detaineeData, function (error, detainee) {
-      doLog && console.log(`create detainee result: ${detainee}`);
+
       if (error) {
         logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
         res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
@@ -116,7 +108,7 @@ module.exports.post = (req, res) => {
       }
     })
   } else {
-    logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+    // logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
   }
 };
 
@@ -137,8 +129,6 @@ module.exports.delete = (req, res) => {
     facilityID,
     detaineeID,
   }, (error, detainee) => {
-    console.log(detainee._ct);
-    doLog && console.log(`delete detainee result: ${detainee} (if value is null there may be no user with this id at the requestor's facility)`);
     if (error) {
       logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
       res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));

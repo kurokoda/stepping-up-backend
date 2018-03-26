@@ -12,6 +12,9 @@ const userRouter     = require('./routes/user');
 const screenRouter   = require('./routes/screen');
 const facilityRouter = require('./routes/facility');
 const detaineeRouter = require('./routes/detainee');
+const database       = require('./service/database');
+
+database.setPHIDatabase(mongoose.createConnection(config.MONGO_URI_PII));
 
 const MongoStore = require('connect-mongo')(session);
 
@@ -24,7 +27,7 @@ const isProduction = process.env.NODE_ENV != 'development';
 if (config.MONGO_URI) {
   const database = mongoose.connection;
   mongoose.connect(config.MONGO_URI);
-  console.log('db connection attempt')
+  console.log('db connection attempt');
   database.on('connect', console.log.bind(console, 'db connection success:'));
   database.on('error', console.error.bind(console, 'db connection error:'));
   database.once('open', function () {

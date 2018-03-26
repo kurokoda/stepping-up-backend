@@ -5,19 +5,20 @@ const router     = express.Router();
 
 // auth:login -------------------------------------------------------------------
 
-router.post(`${route}login`, (req, res) => {
+router.post(`/api/user/login`, (req, res) => {
   controller.login(req, res);
 });
 
 // auth:logout -------------------------------------------------------------------
 
-router.post(`${route}logout`, (req, res) => {
+router.get(`/api/user/logout`, (req, res) => {
+  console.log('HERE I AM');
   controller.logout(req, res);
 });
 
 // signup -------------------------------------------------------------------
 
-router.post(`${route}signup`, (req, res) => {
+router.post(`/api/user/signup`, (req, res) => {
   controller.signup(req, res);
 });
 
@@ -27,22 +28,22 @@ router.post(route, (req, res) => {
   controller.post(req, res);
 });
 
-// read all -------------------------------------------------------------------
-
-router.get(route, (req, res) => {
-  controller.all(req, res);
-});
-
 // read -------------------------------------------------------------------
 
-router.get(`${route}:id`, (req, res) => {
+router.get(`/api/user/:id`, (req, res) => {
   controller.get(req, res);
 });
 
 // delete -------------------------------------------------------------------
 
-router.delete(`${route}:id`, (req, res) => {
+router.delete(`/api/user/:id`, (req, res) => {
   controller.delete(req, res);
+});
+
+// delete -------------------------------------------------------------------
+
+router.get(`/api/user/session/validate/:id`, (req, res) => {
+  controller.synchronizeUserSession(req, res);
 });
 
 // exports -------------------------------------------------------------------

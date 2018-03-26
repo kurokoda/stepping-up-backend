@@ -15,6 +15,30 @@ router.get(route, (req, res) => {
   controller.all(req, res);
 });
 
+// read all -------------------------------------------------------------------
+
+router.get(`${route}users`, (req, res) => {
+  controller.getFacilityUsers(req, res);
+});
+
+// read all -------------------------------------------------------------------
+
+router.get(`${route}admins`, (req, res) => {
+  controller.getFacilityAdmins(req, res);
+});
+
+// read all -------------------------------------------------------------------
+
+router.get(`${route}counselors`, (req, res) => {
+  controller.getFacilityCounselors(req, res);
+});
+
+// read all -------------------------------------------------------------------
+
+router.get(`${route}detainees`, (req, res) => {
+  controller.getFacilityDetainees(req, res);
+});
+
 // read -------------------------------------------------------------------
 
 router.get(`${route}:id`, (req, res) => {
