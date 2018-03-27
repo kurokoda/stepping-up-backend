@@ -7,38 +7,26 @@ const logger         = require('morgan');
 const mongoose       = require('mongoose');
 const path           = require('path');
 const session        = require('express-session');
+const databases      = require('./service/database');
 const questionRouter = require('./routes/user');
 const userRouter     = require('./routes/user');
 const screenRouter   = require('./routes/screen');
 const facilityRouter = require('./routes/facility');
 const detaineeRouter = require('./routes/detainee');
-const database       = require('./service/database');
+const MongoStore   = require('connect-mongo')(session);
 
-database.setPHIDatabase(mongoose.createConnection(config.MONGO_URI_PII));
-
-const MongoStore = require('connect-mongo')(session);
-
-const app = express();
-
-const isProduction = process.env.NODE_ENV != 'development';
+const app          = express();
+const isProduction = process.env.NODE_ENV !== 'development';
 
 // Mongoose DB ----------------------------------------------------------------------
 
-if (config.MONGO_URI) {
-  const database = mongoose.connection;
-  mongoose.connect(config.MONGO_URI);
-  console.log('db connection attempt');
-  database.on('connect', console.log.bind(console, 'db connection success:'));
-  database.on('error', console.error.bind(console, 'db connection error:'));
-  database.once('open', function () {
-    const facilityController = require('./controllers/facility');
-    const detaineeController = require('./controllers/detainee');
-    const userController     = require('./controllers/user');
-    facilityController.seed();
-    userController.seed();
-    detaineeController.seed();
-  });
-}
+databases.primaryDatabase.on('connect', console.log.bind(console, 'db connection success:'));
+databases.primaryDatabase.on('error', console.error.bind(console, 'db connection error:'));
+databases.primaryDatabase.once('open', function () {
+  require('./controllers/facility').seed();
+  require('./controllers/detainee').seed();
+  require('./controllers/user').seed();
+});
 
 
 // Setings ----------------------------------------------------------------------
@@ -59,7 +47,7 @@ const corsConfig = {
 };
 
 const storeConfig = {
-  mongooseConnection: mongoose.connection,
+  mongooseConnection: databases.primaryDatabase,
 };
 
 const sessionConfig = {

@@ -1,42 +1,45 @@
-const RESPONSE = require('../constants/response');
-const Detainee = require('../schema/detainee');
-const logging  = require('../service/logging');
+const RESPONSE    = require('../constants/response');
+const Detainee    = require('../schema/detainee');
+const DetaineePHI = require('../schema/detaineePHI');
+const logging     = require('../service/logging');
 
 // seed -------------------------------------------------------------------
 
 module.exports.seed = () => {
   const url         = 'https://randomuser.me/api/?results=50&nat=us';
-  const facilityIDs = ['100', '101', '102'];
+  const facilityIDs = ['100', '101','102'];
   const fetch       = require('node-fetch');
   fetch(url)
   .then(response => {
-    response.json().then(json => {
+    response.json()
+    .then(json => {
       Detainee.remove({}, () => {
-        for (let i = 0; i < json.results.length; i++) {
-          const index        = Math.floor(Math.random() * 3);
-          const detaineeID   = Math.ceil(Math.random() * 1000000);
-          const data         = json.results[i];
-          const detaineeData = {
-            facilityID: facilityIDs[index],
-            detaineeID: detaineeID,
-            gender    : data.gender,
-            firstName : data.name.first,
-            lastName  : data.name.last,
-          };
-          Detainee.create(detaineeData, (error, detainee) => {
-            if (error) {
-              console.log('Error creating detainee', error);
-            } else {
-              // console.log(detainee);
-            }
-          });
-        }
+        DetaineePHI.remove({}, () => {
+          for (let i = 0; i < json.results.length; i++) {
+            const index        = Math.floor(Math.random() * 3);
+            const detaineeID   = Math.ceil(Math.random() * 1000000);
+            const data         = json.results[i];
+            const detaineeData = {
+              facilityID: facilityIDs[index],
+              detaineeID: detaineeID,
+              gender    : data.gender,
+              firstName : data.name.first,
+              lastName  : data.name.last,
+            };
+            Detainee.create(detaineeData, (error, detainee) => {
+              const detaineePHIData = {
+                gender: data.gender,
+                pii   : detainee.id,
+              };
+              DetaineePHI.create(detaineePHIData, function (error, detainee) {
+                if (error) {} else {};
+              })
+            });
+          }
+        });
       });
     });
   })
-  .catch(error => {
-    console.log(error);
-  });
 };
 
 // read all -------------------------------------------------------------------
@@ -91,6 +94,7 @@ module.exports.post = (req, res) => {
     req.body.facilityID
   ) {
     const detaineeData = {
+
       firstName : req.body.firstName,
       lastName  : req.body.lastName,
       detaineeID: req.body.detaineeID,
@@ -98,17 +102,25 @@ module.exports.post = (req, res) => {
       facilityID: req.body.facilityID,
     };
     Detainee.create(detaineeData, function (error, detainee) {
-
       if (error) {
         logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
         res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
       } else {
-        logging.logUserAction({action, userID, ip: req.ip});
-        res.status(200).send();
+        const detaineePHIData = {
+          gender: data.gender,
+          pii   : detainee.id,
+        };
+        DetaineePHI.create(detaineePHIData, function (error, detainee) {
+          if (error) {
+            logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+            res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
+          } else {
+            logging.logUserAction({action, userID, ip: req.ip});
+            res.status(200).send();
+          }
+        })
       }
     })
-  } else {
-    // logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
   }
 };
 

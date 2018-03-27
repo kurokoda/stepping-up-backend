@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const databases = require('../service/database')
 
 // TODO add type precision
 
@@ -29,5 +30,5 @@ const Schema = new mongoose.Schema({
   },
 });
 
-const ApiError = mongoose.model('ApiError', Schema);
+const ApiError = databases.primaryDatabase.model('ApiError', Schema);
 module.exports = ApiError;

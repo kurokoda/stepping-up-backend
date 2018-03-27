@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const config   = require('../config');
+const databases = require('../service/database')
 
 // TODO add type precision
 
@@ -33,14 +34,6 @@ Schema.methods.toJSON = function () {
   delete obj.v;
   return obj;
 };
-const CryptoJS        = require('crypto-js');
 
-const data = [{id: 1}, {id: 2}]
-
-const ciphertext    = CryptoJS.AES.encrypt(JSON.stringify(data), config.CRYPTO_PASSWORD);
-const bytes         = CryptoJS.AES.decrypt(ciphertext.toString(), config.CRYPTO_PASSWORD);
-const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-
-const Detainee = mongoose.model('Detainee', Schema);
-
+const Detainee = databases.primaryDatabase.model('Detainee', Schema);
 module.exports = Detainee;

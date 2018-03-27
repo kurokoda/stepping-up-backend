@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const databases = require('../service/database')
 
 // TODO add type precision
 
@@ -25,5 +26,5 @@ const Schema = new mongoose.Schema({
   },
 });
 
-const UserAction = mongoose.model('UserAction', Schema);
+const UserAction = databases.primaryDatabase.model('UserAction', Schema);
 module.exports = UserAction;

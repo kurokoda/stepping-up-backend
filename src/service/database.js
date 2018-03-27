@@ -1,13 +1,11 @@
-module.exports.appDatabase = null;
-module.exports.phiDatabase = null;
+const mongoose = require('mongoose');
+const config   = require('../config');
 
-module.exports.setApplicationDatabase = (connection) => {
-  if (this.appDatabase) return;
-  this.appDatabase = connection;
-};
+const primaryDatabase   = mongoose.createConnection(config.MONGO_URI);
+const secondaryDatabase = mongoose.createConnection(config.MONGO_URI_PHI);
 
-module.exports.setPHIDatabase = (connection) => {
-  if (this.phiDatabase) return;
-  this.phiDatabase = connection;
-};
+module.exports.secondaryDatabase = secondaryDatabase;
+module.exports.primaryDatabase   = primaryDatabase;
+
+
 

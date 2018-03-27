@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const databases = require('../service/database')
 
 // TODO add type precision
 
@@ -45,5 +46,5 @@ Schema.methods.toJSON = function () {
   return obj;
 };
 
-const Facility = mongoose.model('Facility', Schema);
+const Facility = databases.primaryDatabase.model('Facility', Schema);
 module.exports = Facility;

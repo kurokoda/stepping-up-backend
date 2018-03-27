@@ -3,7 +3,6 @@ const Facility = require('../schema/facility');
 const logging  = require('../service/logging');
 const User     = require('../schema/user');
 const Detainee = require('../schema/detainee');
-const doLog    = true;
 
 // seed -------------------------------------------------------------------
 
@@ -178,7 +177,6 @@ module.exports.getFacilityUsers = (req, res) => {
   User.find({
     facilityID,
   }, (error, users) => {
-
     if (error) {
       logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
       res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));

@@ -1,9 +1,7 @@
-const RESPONSE = require('../constants/response');
-const User     = require('../schema/user');
-const logging  = require('../service/logging');
-const auth     = require('../service/auth');
-
-const doLog = false;
+const RESPONSE  = require('../constants/response');
+const logging   = require('../service/logging');
+const auth      = require('../service/auth');
+const User      = require('../schema/user');
 
 // seed -------------------------------------------------------------------
 
@@ -128,6 +126,7 @@ module.exports.seed = () => {
 
 module.exports.login = (req, res) => {
   console.log('login', req.body.email, req.body.password);
+
   User.authenticate(req.body.email, req.body.password, function (error, user) {
     if (error || !user) {
       const error  = new Error('Wrong email or password.');
@@ -183,8 +182,10 @@ module.exports.signup = (req, res) => {
     };
     User.create(userData, function (error) {
       if (error) {
+        console.log('User create error', error);
         res.status(403).send(error);
       } else {
+        console.log('User create success');
         User.findOne({email: userData.email}, function (error, user) {
           if (error) {
             res.status(404).send(error);
@@ -297,7 +298,7 @@ module.exports.synchronizeUserSession = (req, res) => {
   console.log('request session id:', req.session.user ? req.session.user.userID : undefined);
   console.log('request user id:', req.params.id);
   const doesRequestUserMatchSessionUser = (req.session.user ? req.session.user.userID === req.params.id : false);
-  if(doesRequestUserMatchSessionUser){
+  if (doesRequestUserMatchSessionUser) {
     res.status(200).send();
   } else {
     res.status(404).send();

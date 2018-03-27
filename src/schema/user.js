@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt   = require('bcrypt');
+const databases = require('../service/database');
 
 // TODO add type precision
 
@@ -84,5 +85,5 @@ Schema.statics.authenticate = function (email, password, callback) {
   });
 };
 
-const User     = mongoose.model('User', Schema);
+const User     = databases.primaryDatabase.model('User', Schema);
 module.exports = User;
