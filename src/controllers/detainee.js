@@ -7,7 +7,7 @@ const logging     = require('../service/logging');
 
 module.exports.seed = () => {
   const url         = 'https://randomuser.me/api/?results=50&nat=us';
-  const facilityIDs = ['100', '101','102'];
+  const facilityIDs = ['100', '101', '102'];
   const fetch       = require('node-fetch');
   fetch(url)
   .then(response => {
@@ -28,11 +28,14 @@ module.exports.seed = () => {
             };
             Detainee.create(detaineeData, (error, detainee) => {
               const detaineePHIData = {
+                _id   : detainee.id,
                 gender: data.gender,
-                pii   : detainee.id,
               };
               DetaineePHI.create(detaineePHIData, function (error, detainee) {
-                if (error) {} else {};
+                if (error) {
+                } else {
+                }
+                ;
               })
             });
           }

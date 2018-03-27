@@ -10,11 +10,6 @@ const Schema = new mongoose.Schema({
     required: true,
     trim    : true
   },
-  pii  : {
-    type    : String,
-    required: true,
-    trim    : true,
-  },
 });
 
 Schema.methods.toJSON = function () {
