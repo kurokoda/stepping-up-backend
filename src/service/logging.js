@@ -1,7 +1,6 @@
 const UserAction = require('../schema/userAction');
 const ApiError   = require('../schema/ApiError');
 
-
 module.exports.logUserAction = (data) => {
   if (
     data.userID &&
