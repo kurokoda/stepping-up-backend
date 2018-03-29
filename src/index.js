@@ -28,7 +28,6 @@ databases.primaryDatabase.once('open', function () {
   require('./controllers/user').seed();
 });
 
-
 // Setings ----------------------------------------------------------------------
 
 app.set('views', path.join(__dirname, 'views'));
