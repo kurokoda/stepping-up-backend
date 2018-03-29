@@ -1,7 +1,7 @@
-const RESPONSE  = require('../constants/response');
-const logging   = require('../service/logging');
-const auth      = require('../service/auth');
-const User      = require('../schema/user');
+const RESPONSE = require('../constants/response');
+const logging  = require('../service/logging');
+const auth     = require('../service/auth');
+const User     = require('../schema/user');
 
 // seed -------------------------------------------------------------------
 
@@ -143,18 +143,15 @@ module.exports.login = (req, res) => {
 // auth:logout -------------------------------------------------------------------
 
 module.exports.logout = (req, res) => {
-  console.log('IT BEGINS', req.session);
   if (req.session) {
     req.session.destroy(function (error) {
       if (error) {
         res.status(500).send({express: 'logout error', params: req.body});
       } else {
         res.status(200).send({express: 'logout successful', params: req.body});
-        console.log('AND HERE I GO');
       }
     });
   } else {
-    console.log('AND HERE I GO');
     res.status(200).send({express: 'logout successful', params: req.body});
   }
 };
@@ -295,8 +292,6 @@ module.exports.delete = (req, res) => {
 // validate -------------------------------------------------------------------
 
 module.exports.synchronizeUserSession = (req, res) => {
-  console.log('request session id:', req.session.user ? req.session.user.userID : undefined);
-  console.log('request user id:', req.params.id);
   const doesRequestUserMatchSessionUser = (req.session.user ? req.session.user.userID === req.params.id : false);
   if (doesRequestUserMatchSessionUser) {
     res.status(200).send();

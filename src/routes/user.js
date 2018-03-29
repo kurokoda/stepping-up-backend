@@ -12,7 +12,6 @@ router.post(`/api/user/login`, (req, res) => {
 // auth:logout -------------------------------------------------------------------
 
 router.get(`/api/user/logout`, (req, res) => {
-  console.log('HERE I AM');
   controller.logout(req, res);
 });
 

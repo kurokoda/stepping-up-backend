@@ -13,10 +13,12 @@ const userRouter     = require('./routes/user');
 const screenRouter   = require('./routes/screen');
 const facilityRouter = require('./routes/facility');
 const detaineeRouter = require('./routes/detainee');
-const MongoStore   = require('connect-mongo')(session);
+const MongoStore     = require('connect-mongo')(session);
 
 const app          = express();
 const isProduction = process.env.NODE_ENV !== 'development';
+
+console.log('A pile of charred monkeys');
 
 // Mongoose DB ----------------------------------------------------------------------
 
@@ -35,7 +37,7 @@ app.set('view engine', 'jade');
 
 // Middleware ----------------------------------------------------------------------
 
-const origin = isProduction ? 'https://stepping-up-frontend.herokuapp.com' : 'http://localhost:3000'
+const origin = isProduction ? 'https://stepping-up-frontend.herokuapp.com' : 'http://localhost:3000';
 
 const corsConfig = {
   origin,
@@ -56,9 +58,10 @@ const sessionConfig = {
   saveUninitialized: false,
   store            : new MongoStore(storeConfig),
   cookie           : {
+    domain  : 'herokuapp.com',
     secure  : false,
     httpOnly: true,
-    expires : new Date(Date.now() + 60 * 60 * 1000)
+    maxAge  : 60 * 60 * 1000,
   }
 };
 
@@ -70,6 +73,16 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 // Routing middleware----------------------------------------------------------------------
+
+app.get('/test', (req, res) => {
+  console.log('#');
+  console.log('#');
+  console.log('#-------------------- session ', req.session.id);
+  console.log('#-------------------- cookie ', req.session.cookie.domain);
+  console.log('#');
+  console.log('#');
+  res.sendStatus(200)
+})
 
 app.use(questionRouter);
 app.use(userRouter);
