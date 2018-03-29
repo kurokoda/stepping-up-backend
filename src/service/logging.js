@@ -1,5 +1,5 @@
 const UserAction = require('../schema/userAction');
-const ApiError   = require('../schema/ApiError');
+const ApiError   = require('../schema/apiError');
 
 module.exports.logUserAction = (data) => {
   if (
