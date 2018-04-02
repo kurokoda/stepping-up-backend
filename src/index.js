@@ -58,7 +58,6 @@ const sessionConfig = {
   saveUninitialized: false,
   store            : new MongoStore(storeConfig),
   cookie           : {
-    domain  : 'herokuapp.com',
     secure  : false,
     httpOnly: true,
     maxAge  : 60 * 60 * 1000,
