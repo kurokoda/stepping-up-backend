@@ -209,7 +209,13 @@ module.exports.users = () => {
           };
           User.create(userData, (error, user) => {
             Facility.findOne({facilityID: user.facilityID}, (error, facility) => {
-              facility.users.push(user);
+              if (user.admin){
+                facility.admins.push(user);
+              } else if (user.counselor){
+                facility.counselors.push(user);
+              } else {
+                facility.users.push(user);
+              }
               facility.save();
             })
           });

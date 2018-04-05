@@ -114,17 +114,19 @@ module.exports.delete = (req, res) => {
 module.exports.getFacilityUsers = (req, res) => {
   if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
   const action     = 'get_facility_users';
-  const userID     = req.session.user._id;
   const facilityID = req.session.user.facilityID;
-  User.find({
-    facilityID,
-  }, (error, users) => {
+  Facility.findOne({
+    facilityID
+  }, (error, facility) => {
     if (error) {
       logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
       res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
     } else {
-      logging.logUserAction({action, userID, ip: req.ip});
-      res.status(200).send(users);
+      logging.logUserAction({action, userID: req.session.user._id, ip: req.ip});
+      const {ordinal, count} = req.query;
+      const users            = facility.users.slice((ordinal * count) - count, ordinal * count);
+      const usersTotal       = facility.users.length;
+      res.status(200).send({users, usersTotal});
     }
   })
 };
@@ -157,28 +159,6 @@ module.exports.getFacilityAdmins = (req, res) => {
 module.exports.getFacilityCounselors = (req, res) => {
   if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
   const action     = 'get_facility_counselors';
-  const userID     = req.session.user._id;
-  const facilityID = req.session.user.facilityID;
-  User.find({
-    facilityID,
-    counselor: true,
-  }, (error, counselors) => {
-
-    if (error) {
-      logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
-      res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
-    } else {
-      logging.logUserAction({action, userID, ip: req.ip});
-      res.status(200).send(counselors);
-    }
-  })
-};
-
-// read all -------------------------------------------------------------------
-
-module.exports.getFacilityDetainees = (req, res) => {
-  if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
-  const action     = 'get_detainees';
   const facilityID = req.session.user.facilityID;
   Facility.findOne({
     facilityID
@@ -189,8 +169,30 @@ module.exports.getFacilityDetainees = (req, res) => {
     } else {
       logging.logUserAction({action, userID: req.session.user._id, ip: req.ip});
       const {ordinal, count} = req.query;
-      const detainees = facility.detainees.slice((ordinal * count) - count, ordinal * count);
-      const detaineesTotal = facility.detainees.length;
+      const counselors       = facility.counselors.slice((ordinal * count) - count, ordinal * count);
+      const counselorsTotal  = facility.counselors.length;
+      res.status(200).send({counselors, counselorsTotal});
+    }
+  })
+};
+
+// read all -------------------------------------------------------------------
+
+module.exports.getFacilityDetainees = (req, res) => {
+  if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
+  const action     = 'get_facility_detainees';
+  const facilityID = req.session.user.facilityID;
+  Facility.findOne({
+    facilityID
+  }, (error, facility) => {
+    if (error) {
+      logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
+      res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
+    } else {
+      logging.logUserAction({action, userID: req.session.user._id, ip: req.ip});
+      const {ordinal, count} = req.query;
+      const detainees        = facility.detainees.slice((ordinal * count) - count, ordinal * count);
+      const detaineesTotal   = facility.detainees.length;
       res.status(200).send({detainees, detaineesTotal});
     }
   })

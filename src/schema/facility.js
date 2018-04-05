@@ -35,6 +35,10 @@ const Schema = new mongoose.Schema({
     required: true,
     trim    : true,
   },
+  admins : {
+    type   : Array,
+    default: [],
+  },
   users : {
     type   : Array,
     default: [],

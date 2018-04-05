@@ -36,7 +36,6 @@ router.get(`${route}counselors`, (req, res) => {
 // read all -------------------------------------------------------------------
 
 router.get(`${route}detainees`, (req, res) => {
-  console.log('getting detainees');
   controller.getFacilityDetainees(req, res);
 });
 
