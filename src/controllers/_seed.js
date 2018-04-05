@@ -118,6 +118,16 @@ module.exports.users = () => {
       counselor : true,
     },
     {
+      firstName : 'Andrew',
+      lastName  : 'Lord',
+      email     : 'one@user.com',
+      username  : 'andrewLord',
+      password  : 'password',
+      facilityID: '100',
+      admin     : null,
+      counselor : null,
+    },
+    {
       firstName : 'Bella',
       lastName  : 'Bailey',
       email     : 'two@admin.com',
