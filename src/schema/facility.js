@@ -35,6 +35,18 @@ const Schema = new mongoose.Schema({
     required: true,
     trim    : true,
   },
+  users : {
+    type   : Array,
+    default: [],
+  },
+  counselors : {
+    type   : Array,
+    default: [],
+  },
+  detainees : {
+    type   : Array,
+    default: [],
+  },
 });
 
 // TODO upddate output filtering

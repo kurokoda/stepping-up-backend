@@ -3,48 +3,6 @@ const Detainee    = require('../schema/detainee');
 const DetaineePHI = require('../schema/detaineePHI');
 const logging     = require('../service/logging');
 
-// seed -------------------------------------------------------------------
-
-module.exports.seed = () => {
-  const url         = 'https://randomuser.me/api/?results=50&nat=us';
-  const facilityIDs = ['100', '101', '102'];
-  const fetch       = require('node-fetch');
-  fetch(url)
-  .then(response => {
-    response.json()
-    .then(json => {
-      Detainee.remove({}, () => {
-        DetaineePHI.remove({}, () => {
-          for (let i = 0; i < json.results.length; i++) {
-            const index        = Math.floor(Math.random() * 3);
-            const detaineeID   = Math.ceil(Math.random() * 1000000);
-            const data         = json.results[i];
-            const detaineeData = {
-              facilityID: facilityIDs[index],
-              detaineeID: detaineeID,
-              gender    : data.gender,
-              firstName : data.name.first,
-              lastName  : data.name.last,
-            };
-            Detainee.create(detaineeData, (error, detainee) => {
-              const detaineePHIData = {
-                _id   : detainee.id,
-                gender: data.gender,
-              };
-              DetaineePHI.create(detaineePHIData, function (error, detainee) {
-                if (error) {
-                } else {
-                }
-                ;
-              })
-            });
-          }
-        });
-      });
-    });
-  })
-};
-
 // read all -------------------------------------------------------------------
 
 module.exports.all = (req, res) => {

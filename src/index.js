@@ -18,16 +18,16 @@ const MongoStore     = require('connect-mongo')(session);
 const app          = express();
 const isProduction = process.env.NODE_ENV !== 'development';
 
-console.log('A pile of charred monkeys');
+console.log('A murder of crows');
 
 // Mongoose DB ----------------------------------------------------------------------
 
 databases.primaryDatabase.on('connect', console.log.bind(console, 'db connection success:'));
 databases.primaryDatabase.on('error', console.error.bind(console, 'db connection error:'));
 databases.primaryDatabase.once('open', function () {
-  require('./controllers/facility').seed();
-  require('./controllers/detainee').seed();
-  require('./controllers/user').seed();
+  // require('./controllers/_seed').facilities();
+  // require('./controllers/_seed').users();
+  // require('./controllers/_seed').detainees();
 });
 
 // Setings ----------------------------------------------------------------------
@@ -74,12 +74,6 @@ app.use(cookieParser());
 // Routing middleware----------------------------------------------------------------------
 
 app.get('/test', (req, res) => {
-  console.log('#');
-  console.log('#');
-  console.log('#-------------------- session ', req.session.id);
-  console.log('#-------------------- cookie ', req.session.cookie.domain);
-  console.log('#');
-  console.log('#');
   res.sendStatus(200)
 })
 

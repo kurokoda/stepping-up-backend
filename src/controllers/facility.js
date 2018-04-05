@@ -4,61 +4,6 @@ const logging  = require('../service/logging');
 const User     = require('../schema/user');
 const Detainee = require('../schema/detainee');
 
-// seed -------------------------------------------------------------------
-
-module.exports.seed = () => {
-  const facilities = [
-    {
-      facilityID: '100',
-      name      : 'Florence State Prison',
-      address   : '1305 E Butte Ave',
-      city      : 'Florence',
-      state     : 'AZ',
-      zip       : '85132',
-    },
-    {
-      facilityID: '101',
-      name      : 'Phoenix State Prison',
-      address   : '2500 E Van Buren St',
-      city      : 'Phoenix',
-      state     : 'AZ',
-      zip       : '85008',
-    },
-    {
-      facilityID: '102',
-      name      : 'Tuscon State Prison',
-      address   : '10000 South Wilmot',
-      city      : 'Tuscon',
-      state     : 'AZ',
-      zip       : '85734',
-    },
-  ];
-
-  Facility.remove({}, () => {
-    for (let i = 0; i < facilities.length; i++) {
-      const data         = facilities[i];
-      const facilityData = {
-        facilityID: data.facilityID,
-        name      : data.name,
-        address   : data.address,
-        city      : data.city,
-        state     : data.state,
-        zip       : data.zip,
-      };
-      Facility.create(facilityData, (error, facility) => {
-        if (error) {
-
-        } else {
-
-        }
-      });
-    }
-  })
-  .catch(error => {
-
-  });
-};
-
 // create -------------------------------------------------------------------
 
 module.exports.post = (req, res) => {
@@ -84,7 +29,6 @@ module.exports.post = (req, res) => {
       zip       : req.body.zip,
     };
     Facility.create(facilityData, function (error, facility) {
-
       if (error) {
         logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
         res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
@@ -93,8 +37,6 @@ module.exports.post = (req, res) => {
         res.status(200).send();
       }
     })
-  } else {
-    logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
   }
 };
 
@@ -238,17 +180,18 @@ module.exports.getFacilityDetainees = (req, res) => {
   if (!req.session.user) return res.status(401).send(RESPONSE.NOT_AUTHORIZED_401());
   const action     = 'get_detainees';
   const facilityID = req.session.user.facilityID;
-  Detainee.find({
+  Facility.findOne({
     facilityID
-  }, (error, detainees) => {
-
-
+  }, (error, facility) => {
     if (error) {
       logging.logApiError({action, userID: req.session.user._id, code: 404, error: {msg: error.msg}, ip: req.ip});
       res.status(404).send(RESPONSE.NOT_FOUND_404({msg: error.msg}));
     } else {
       logging.logUserAction({action, userID: req.session.user._id, ip: req.ip});
-      res.status(200).send(detainees);
+      const {ordinal, count} = req.query;
+      const detainees = facility.detainees.slice((ordinal * count) - count, ordinal * count);
+      const detaineesTotal = facility.detainees.length;
+      res.status(200).send({detainees, detaineesTotal});
     }
   })
 };
