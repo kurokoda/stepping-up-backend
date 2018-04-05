@@ -37,10 +37,13 @@ app.set('view engine', 'jade');
 
 // Middleware ----------------------------------------------------------------------
 
-const origin = isProduction ? 'https://stepping-up-frontend.herokuapp.com' : 'http://localhost:3000';
 
 const corsConfig = {
-  origin,
+  origin              : [
+    'https://stepping-up-frontend.herokuapp.com',
+    'https://stepping-up-backend.herokuapp.com',
+    'http://localhost:3000'
+  ],
   allowedHeaders      : ['Content-Type', 'Authorization', 'Content-Length', 'X-Requested-With', 'Accept', 'Cache'],
   methods             : ['GET', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials         : true,
@@ -71,6 +74,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
+// Static assets ----------------------------------------------------------------------
+
+app.use(express.static(path.join(__dirname, 'static')));
+
 // Routing middleware----------------------------------------------------------------------
 
 app.get('/test', (req, res) => {
@@ -82,6 +89,10 @@ app.use(userRouter);
 app.use(screenRouter);
 app.use(facilityRouter);
 app.use(detaineeRouter);
+
+app.get('*', (req, res) => {
+  res.sendFile('/index.html');
+});
 
 
 // Error middleware ----------------------------------------------------------------------
