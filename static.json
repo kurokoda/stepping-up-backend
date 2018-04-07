@@ -1,7 +1,7 @@
 {
-  "root": "frontend/build/",
+  "root": "src/static/",
   "clean_urls": false,
   "routes": {
-    "/**": "index.html"
+    "/*.html": "/index.html"
   }
 }

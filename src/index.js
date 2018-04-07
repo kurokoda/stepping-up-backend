@@ -90,10 +90,9 @@ app.use(screenRouter);
 app.use(facilityRouter);
 app.use(detaineeRouter);
 
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile('/index.html');
 });
-
 
 // Error middleware ----------------------------------------------------------------------
 
